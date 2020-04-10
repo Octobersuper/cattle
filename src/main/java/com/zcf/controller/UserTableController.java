@@ -37,7 +37,6 @@ public class UserTableController {
      *@Date:2019/2/25
      */
     @PostMapping("login")
-    @ResponseBody
     public Body login(UserTable user){
         return userService.login(user);
     }
@@ -51,7 +50,6 @@ public class UserTableController {
      *@Date:2019/2/26
      */
     @PostMapping("getUser")
-    @ResponseBody
     public Body getUser(UserTable user){
         return userService.getUser(user);
     }
@@ -65,7 +63,6 @@ public class UserTableController {
      *@Date:2019/2/25
      */
     @GetMapping("getUsers")
-    @ResponseBody
     public LayuiJson getUsers(UserTable user, @RequestParam(value = "pageNum") int pageNum,
                               @RequestParam(value = "pageSize") int pageSize){
         return userService.getUsers(user,pageNum,pageSize);
@@ -80,7 +77,6 @@ public class UserTableController {
      *@Date:2019/2/25
      */
     @GetMapping("selectUser")
-    @ResponseBody
     public Body getUsers(UserTable user){
         return Body.newInstance(user.selectAll());
     }
@@ -94,7 +90,6 @@ public class UserTableController {
      *@Date:2019/2/25
      */
     @PostMapping("update")
-    @ResponseBody
     public Body update(UserTable user){
         if(user.getPassword()!=null){
             user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
@@ -115,7 +110,6 @@ public class UserTableController {
      *@Date:2019/2/25
      */
     @PostMapping("delete")
-    @ResponseBody
     public Body delete(UserTable user){
         return Body.newInstance(userService.deleteById(user.getUserid()));
     }

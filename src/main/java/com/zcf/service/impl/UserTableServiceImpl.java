@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,15 +47,26 @@ public class UserTableServiceImpl extends ServiceImpl<UserTableMapper, UserTable
     }
 
     public Body login(UserTable user) {
-        user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
-        UserTable user1 = um.selectOne(user);
-        if (user1 != null) {
-            if(user1.getState()!=null && user1.getState()==1){
+        EntityWrapper<UserTable> ew = new EntityWrapper<>();
+        ew.eq("openid", user.getOpenid());
+        UserTable userTable = user.selectOne(ew);
+        if (userTable != null) {
+            if(user.getAvatarurl()!=null){
+                userTable.setAvatarurl(user.getAvatarurl());
+            }
+            if(user.getNickname()!=null){
+                userTable.setNickname(user.getNickname());
+            }
+            userTable.updateById();
+            if(userTable.getState()!=null && userTable.getState()==1){
                 return Body.newInstance(0,"账号已被冻结，请联系管理员");
             }/*else if(user1.getIsLogin()!=null && user1.getIsLogin()==1){
                 return Body.newInstance(451,"账号已在其他设备登录，如有疑问，请联系管理员");
             }*/
-            return Body.newInstance(user1);
+            return Body.newInstance(userTable);
+        }else{
+            user.setCreatetime(new Date());
+            user.insert();
         }
         return Body.newInstance(1,"账号或密码错误");
     }

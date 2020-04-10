@@ -7,22 +7,50 @@ layui.use(['form','layer','table','laydate'],function(){
         ,id:'tabuser'
         ,height: "auto"
         ,method:"get"
-        ,url: baseUrl+'promoters/getPromoters' //数据接口
+        ,url: baseUrl+'gameRecharge/getc' //数据接口
         ,request: {
             pageName: 'pageNum' //页码的参数名称，默认：page
             ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
         }
         ,page: true //开启分页
         ,cols: [[ //表头
-            {field: 'id', title: 'ID',align:'center',fixed: 'left',width:100,sort:true}
-            ,{field: 'uid', title: '用户ID',align:'center',sort:true}
-            ,{field: 'name', title: '姓名',align:'center',sort:true}
-            ,{field: 'phone', title: '电话',align:'center',sort:true}
-            ,{field: 'state', title: '申请情况',align:'center',sort:true,templet:function (d) {
+            {field: 'rechargeid', title: 'ID',align:'center',fixed: 'left',width:100,sort:true}
+            ,{field: 'user', title: '用户ID',align:'center',sort:true,width:100,templet:function (d) {
+                    return d.user.userid;
+                }}
+            ,{field: 'user', title: '姓名',align:'center',sort:true,width:120,templet:function (d) {
+                    return d.user.nickname;
+                }}
+            ,{field: 'user', title: '用户余额',align:'center',sort:true,width:100,templet:function (d) {
+                    return d.user.money;
+                }}
+            ,{field: 'user', title: '用户保险箱余额',align:'center',sort:true,width:136,templet:function (d) {
+                    return d.user.insure;
+                }}
+            ,{field: 'user', title: '收款账号',align:'center',sort:true,width:200,templet:function (d) {
+                    if(d.type==3){
+                        return "<span style='color: #0064ff'>支付宝：</span>"+d.user.zfb;
+                    }else  if(d.type==4){
+                        return "<span style='color: #ff7e00;'>银行卡：</span>"+d.user.bankcard;
+                    }
+                }}
+            ,{field: 'type', title: '类型',align:'center',sort:true,width:150,templet:function (d) {
+                    if(d.type==1){
+                        return "<span style='color: green'>充值</span>";
+                    }else  if(d.type==2){
+                        return "<span style='color: #ffb508;'>提现</span>";
+                    }else  if(d.type==3){
+                        return "<span style='color: #0064ff;'>支付宝提现</span>";
+                    }else  if(d.type==4){
+                        return "<span style='color: #ff7e00;'>银行卡提现</span>";
+                    }
+                }}
+            ,{field: 'money', title: '申请金额',align:'center',width:136,sort:true}
+            ,{field: 'state', title: '申请情况',align:'center',width:136,sort:true,templet:function (d) {
                     if(d.state==0){
                         return "<span style='color: green'>审核中</span>";
                     }else  if(d.state==1){
-                        return "<span style='color: #0ef3ff;'>已同意</span>";
+                        return "<span style='color: #ff6d00;'>已同意</span>";
                     }else  if(d.state==2){
                         return "<span style='color: red;'>已拒绝</span>";
                     }
@@ -42,8 +70,8 @@ layui.use(['form','layer','table','laydate'],function(){
                 //向服务端发送删除指令
                 $.ajax({
                     type: 'post',
-                    url: baseUrl+"promoters/delete",
-                    data:{id:data.id},
+                    url: baseUrl+"gameRecharge/delete",
+                    data:{rechargeid:data.rechargeid},
                     dataType: 'json',
                     success: function(res){
                         if(res.meta.code===200){
@@ -64,11 +92,11 @@ layui.use(['form','layer','table','laydate'],function(){
             layer.confirm('确定同意该用户的申请吗？', {
                 btn: ['确定','取消'] //按钮
             }, function(){
-                var uinfo = {'id': data.id , "state" : 1 ,'uid':data.uid}
+                var uinfo = {'rechargeid': data.rechargeid , "state" : 1 ,"type":data.type ,"money":data.money,"userid":data.user.userid}
                 //这里一般是发送修改的Ajax请求
                 $.ajax({
                     type: 'post',
-                    url: baseUrl+"/promoters/update",
+                    url: baseUrl+"/gameRecharge/update",
                     data: uinfo,
                     async:false,
                     dataType: 'json',
@@ -93,11 +121,11 @@ layui.use(['form','layer','table','laydate'],function(){
             layer.confirm('确定拒绝该用户的申请吗？', {
                 btn: ['确定','取消'] //按钮
             }, function(){
-                var uinfo = {'id': data.id , "state" : 2 ,'uid':data.uid}
+                var uinfo = {'rechargeid': data.rechargeid , "state" : 2 ,'type':data.type,"money":data.money ,"userid":data.user.userid}
                 //这里一般是发送修改的Ajax请求
                 $.ajax({
                     type: 'post',
-                    url: baseUrl+"/promoters/update",
+                    url: baseUrl+"/gameRecharge/update",
                     data: uinfo,
                     async:false,
                     dataType: 'json',

@@ -49,7 +49,7 @@ public class Time_Room extends Thread {
 			if (rb == null) {
 				break;
 			}
-			if (rb.getTimer_user() == 30) {
+			if (rb.getTimes() == 30) {
 				timer = 30;
 				returnMap.put("type", "sit_down_time");
 				returnMap.put("timer", timer);
@@ -106,10 +106,10 @@ public class Time_Room extends Thread {
 			}
 			
 			if (timer < 15) {
-				timer = rb.getTimer_user();
+				timer = rb.getTimes();
 			}
 			timer--;
-			rb.setTimer_user(timer);
+			rb.setTimes(timer);
 			System_Mess.system_Mess.ToMessagePrint("倒计时----------->" + timer);
 
 			for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
@@ -134,7 +134,7 @@ public class Time_Room extends Thread {
 			if (timer == 24) {
 				// 发牌
 				rb.GrantBrand(5, rb);
-				rb.setRoom_state_a(2);
+				rb.setRoom_state(2);
 				returnMap.put("type", "fapai");
 				// returnMap.put("brand_list", rb.getRb_List());
 				rb.getRoomBean_Custom("userid-brand-user_brand_type", returnMap, "");
@@ -142,11 +142,6 @@ public class Time_Room extends Thread {
 				userid.sendMessageToAll(returnMap, rb);
 				userid.sendMessageTo(returnMap);
 				returnMap.clear();
-				for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
-					if (rb.getGame_userList(0).get(i).getUsertype() == 1) {
-						rb.getGame_userList(0).get(i).setMoney_a(rb.getGame_userList(0).get(i).getMoney());
-					}
-				}
 			}
 			
 			if (timer == 19) {
@@ -176,7 +171,7 @@ public class Time_Room extends Thread {
 
 			// 结算
 			if (timer == 5) {
-				rb.setTimer_user(5);
+				rb.setTimes(5);
 				for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
 					if (rb.getGame_userList(0).get(i).getUserid() != rb.getBranker_id()&& rb.getGame_userList(0).get(i).getUsertype() ==1) {
 						UserBean bean = rb.getUserBean(rb.getGame_userList(0).get(i).getUserid());
@@ -194,11 +189,6 @@ public class Time_Room extends Thread {
 				returnMap.clear();
 			}
 			if (timer == 5 && rb.getGame_number() == rb.getMax_number()) {
-				for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
-					if (rb.getGame_userList(0).get(i).getUsertype() == 1) {
-						rb.getGame_userList(0).get(i).setWin_money(rb.getGame_userList(0).get(i).getMoney()-rb.getGame_userList(0).get(i).getStart_money());
-					}
-				}
 				returnMap.put("type", "zhanji");
 				rb.getRoomBean_Custom("userid-nickname-win_money", returnMap, "");
 				PK_WebSocket userid = Public_State.clients.get(String.valueOf(rb.getRoom_branker()));
@@ -223,11 +213,6 @@ public class Time_Room extends Thread {
 			}*/
 			
 			if (timer == 3 && rb.getGame_number() == rb.getMax_number()) {
-				for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
-					if (rb.getGame_userList(0).get(i).getUsertype() == 1) {
-						rb.getGame_userList(0).get(i).setWin_money(rb.getGame_userList(0).get(i).getMoney()-rb.getGame_userList(0).get(i).getStart_money());
-					}
-				}
 				PK_WebSocket userid = Public_State.clients.get(String.valueOf(rb.getRoom_branker()));
 				returnMap.put("type", "zhanji");
 				rb.getRoomBean_Custom("userid-nickname-win_money", returnMap, "");

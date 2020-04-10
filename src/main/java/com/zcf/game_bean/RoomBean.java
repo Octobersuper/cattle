@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.zcf.game_util.Time_Room;
-import com.zcf.pojo.UserTable;
 import com.zcf.service.impl.UserTableServiceImpl;
 import com.zcf.util.CardType;
 
@@ -23,7 +21,7 @@ import com.zcf.util.CardType;
  */
 @SuppressWarnings("unused")
 public class RoomBean {
-	// 房间类型 0抢庄模式 1通比模式
+	// 房间类型 0抢庄模式 1癞子模式
 	private int room_type;
 	// 房间号
 	private String room_number;
@@ -42,19 +40,15 @@ public class RoomBean {
 	// 最大回合数
 	private int max_number;
 	// 底分
-	private int di_fen;
+	private Double di_fen;
 	// 房间状态 0未开始游戏 1倒计时开始游戏阶段 2已开始游戏
 	private int room_state = 0;
-	// 1下注阶段 2搓牌阶段 3结算阶段
-	private int room_state_a;
 	// 当前游戏局数
 	private int game_number;
 	// 房间锁
 	private Lock lock;
 	// 房间当前注数
 	private int bets = 0;
-	// 游戏可加注数
-	private int[] zbets;
 	// 用户位置 用户位置0-7下标代表1-8的座位，值代表用户id
 	private int[] user_positions;
 	// 房间局的牌
@@ -63,36 +57,25 @@ public class RoomBean {
 	private String[] room_brandsList;
 	// 每回合游戏结束的时间
 	private Date game_time;
-	// 倍率
-	private int beilv;
-	// 房间计时器
-	private Time_Room time_Room;
-	// 用户计时器
-	private int timer_user;
-	private int timer_user2;
-	private int timer_user3;
-	private int timer_user4;
-	// 用户信息
-	private UserBean userBean;
 	// 胜利得人
 	private int victoryid;
-	// 最低下注数
-	private int minBets;
 	private int times;
-	// 第一个庄家的在房间座位的下标
-	private int branker_index;
-	// 判断是否继续坐庄
-	private int branker_number;
 	// 抢庄倍数
 	private int branker_ord;
-	// 规则
-	private int rule;
-	// 牌型
-	private String[] brand_type;
 	// 倍率
 	private int ords = 1;
 	// 游戏状态 0 默认未开始 1下注阶段 2开牌阶段 3结算阶段
 	private int game_state;
+	//准入分
+	private int jion_fen;
+
+	public int getJion_fen() {
+		return jion_fen;
+	}
+
+	public void setJion_fen(int jion_fen) {
+		this.jion_fen = jion_fen;
+	}
 
 	public RoomBean() {
 		// 房间锁
@@ -106,7 +89,6 @@ public class RoomBean {
 		}
 		// 默认回合数为1
 		this.game_number = 1;
-		this.branker_number = -1;
 		// 初始化房间未开始
 		this.room_state = 0;
 		// 初始化庄家id
@@ -369,8 +351,6 @@ public class RoomBean {
 				returnMap.put(room, foundation);
 			if (room.equals("bets"))
 				returnMap.put(room, bets);
-			if (room.equals("zbets"))
-				returnMap.put(room, zbets);
 			if (room.equals("rb_List"))
 				returnMap.put(room, rb_List);
 			if (room.equals("room_branker"))
@@ -381,18 +361,8 @@ public class RoomBean {
 				returnMap.put(room, brands);
 			if (room.equals("room_brandsList"))
 				returnMap.put(room, room_brandsList);
-			if (room.equals("minBets"))
-				returnMap.put(room, minBets);
 			if (room.equals("max_number"))
 				returnMap.put(room, max_number);
-			if (room.equals("timer_user"))
-				returnMap.put(room, timer_user);
-			if (room.equals("timer_user2"))
-				returnMap.put(room, timer_user2);
-			if (room.equals("rule"))
-				returnMap.put(room, rule);
-			if (room.equals("brand_type"))
-				returnMap.put(room, brand_type);
 			if (room.equals("ords"))
 				returnMap.put(room, ords);
 			if (room.equals("game_state"))
@@ -531,105 +501,14 @@ public class RoomBean {
 	 */
 	public void GrantBrand(int number, RoomBean rb) {
 		String[] brand = brands.split("-");
-		// 作弊发牌
-		for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
-			if (rb.getGame_userList(0).get(i).getType() == 1) {
-				UserBean userBean = this.getUserBean1(rb_List.get(i).getUserid());
-				for (int j = 0; j < userBean.getCheat().length; j++) {
-					int brand_a = Integer.parseInt(userBean.getCheat()[j]);
-					int if_Brand = this.If_Brand(brand, brand_a);
-					if (if_Brand == 1) { // 如果牌组中有作弊牌则直接发作弊牌
-						this.RemoveBrand(brand_a, brand);
-						rb.getGame_userList(0).get(i).getBrand()[j] = brand_a;
-					} else { // 没有作弊牌随机发一张牌
-						rb.getGame_userList(0).get(i).getBrand()[j] = getBrand();
-					}
-				}
-			}
-		}
 
 		// 正常发牌
-
 		for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
-			if (rb.getGame_userList(0).get(i).getUsertype() == 1 && rb.getGame_userList(0).get(i).getType() != 1) {
+			if (rb.getGame_userList(0).get(i).getUsertype() == 1) {
 				UserBean bean = getUserBean(rb.getGame_userList(0).get(i).getUserid());
 				if (bean == null) {
-					System.out.println("null");
+					continue;
 				}
-				for (int j = 0; j < number; j++) {
-					bean.setBrand(getBrand(), bean);
-				}
-				// 发完牌就获取牌型
-				bean.setUser_brand_type(bean.BrandCount(rb, bean.getBrand()));
-				CardType.BrandIndex(bean.getBrand(), bean);
-			}
-		}
-	}
-
-	/**
-	 * 发牌(通比模式)
-	 *
-	 * @param number @throws
-	 */
-	public void GrantBrand1(int number, RoomBean rb) {
-		String[] brand = brands.split("-");
-		// 作弊发牌
-		for (int i = 0; i < this.getGame_userList(0).size(); i++) {
-			if (this.getGame_userList(0).get(i).getType() == 1 && this.getGame_userList(0).get(i).getUsertype() == 1) {
-				for (int j = 0; j < userBean.getCheat().length; j++) {
-					int brand_a = Integer.parseInt(userBean.getCheat()[j]);
-					int if_Brand = this.If_Brand(brand, brand_a);
-					if (if_Brand == 1) { // 如果牌组中有作弊牌则直接发作弊牌
-						this.RemoveBrand(brand_a, brand);
-						this.getGame_userList(0).get(i).getBrand()[j] = brand_a;
-					} else { // 没有作弊牌随机发一张牌
-						this.getGame_userList(0).get(i).getBrand()[j] = getBrand();
-					}
-				}
-			}
-		}
-
-		// 正常发牌
-		for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
-			if (rb.getGame_userList(0).get(i).getUsertype() == 1) {
-				UserBean bean = getUserBean(rb.getGame_userList(0).get(i).getUserid());
-				for (int j = 0; j < number; j++) {
-					bean.setBrand(getBrand(), bean);
-				}
-				// 发完牌就获取牌型
-				bean.setUser_brand_type(bean.BrandCount(rb, bean.getBrand()));
-				CardType.BrandIndex(bean.getBrand(), bean);
-			}
-		}
-	}
-
-	/**
-	 * 发牌(通比模式)
-	 *
-	 * @param number @throws
-	 */
-	public void GrantBrand3(int number, RoomBean rb) {
-		String[] brand = brands.split("-");
-		// 作弊发牌
-		for (int i = 0; i < this.getGame_userList(0).size(); i++) {
-			if (this.getGame_userList(0).get(i).getType() == 1 && this.getGame_userList(0).get(i).getUsertype() == 1) {
-				for (int j = 0; j < userBean.getCheat().length; j++) {
-					int brand_a = Integer.parseInt(userBean.getCheat()[j]);
-					int if_Brand = this.If_Brand(brand, brand_a);
-					if (if_Brand == 1) { // 如果牌组中有作弊牌则直接发作弊牌
-						this.RemoveBrand(brand_a, brand);
-						this.getGame_userList(0).get(i).getBrand()[j] = brand_a;
-					} else { // 没有作弊牌随机发一张牌
-						this.getGame_userList(0).get(i).getBrand()[j] = getBrand();
-					}
-				}
-			}
-		}
-
-		// 正常发牌
-		for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
-			if (rb.getGame_userList(0).get(i).getUsertype() == 1) {
-				UserBean bean = getUserBean(rb.getGame_userList(0).get(i).getUserid());
 				for (int j = 0; j < number; j++) {
 					bean.setBrand(getBrand(), bean);
 				}
@@ -684,21 +563,6 @@ public class RoomBean {
 			}
 		}
 		this.brands = sb.toString();
-	}
-
-	/**
-	 * 排序用户实体类数组
-	 *
-	 * @return @throws
-	 */
-	public Map<Object, Integer> getUserBandList() {
-		int brand_type = 0;
-		Map<Object, Integer> map = new HashMap<Object, Integer>();
-		for (int i = 0; i < game_userList.size(); i++) {
-			brand_type = game_userList.get(i).getUser_brand_type();
-			map.put(userBean, brand_type);
-		}
-		return map;
 	}
 
 	/**
@@ -822,56 +686,8 @@ public class RoomBean {
 		return game_time;
 	}
 
-	public int getBranker_index() {
-		return branker_index;
-	}
-
-	public void setBranker_index(int branker_index) {
-		this.branker_index = branker_index;
-	}
-
-	public int getMinBets() {
-		return minBets;
-	}
-
-	public void setMinBets(int minBets) {
-		this.minBets = minBets;
-	}
-
-	public int getTimer_user() {
-		return timer_user;
-	}
-
-	public void setTimer_user(int timer_user) {
-		this.timer_user = timer_user;
-	}
-
-	public UserBean getUserBean() {
-		return userBean;
-	}
-
-	public Time_Room getTime_Room() {
-		return time_Room;
-	}
-
-	public void setTime_Room(Time_Room time_Room) {
-		this.time_Room = time_Room;
-	}
-
-	public void setUserBean(UserBean userBean) {
-		this.userBean = userBean;
-	}
-
 	public void setBrands(String brands) {
 		this.brands = brands;
-	}
-
-	public int getBeilv() {
-		return beilv;
-	}
-
-	public void setBeilv(int beilv) {
-		this.beilv = beilv;
 	}
 
 	public Lock getLock() {
@@ -954,20 +770,12 @@ public class RoomBean {
 		this.bets = bets;
 	}
 
-	public int[] getZbets() {
-		return zbets;
-	}
-
 	public int getTimes() {
 		return times;
 	}
 
 	public void setTimes(int times) {
 		this.times = times;
-	}
-
-	public void setZbets(int[] zbets) {
-		this.zbets = zbets;
 	}
 
 	public int[] getUser_positions() {
@@ -980,14 +788,6 @@ public class RoomBean {
 
 	public String[] getRoom_brandsList() {
 		return room_brandsList;
-	}
-
-	public int getTimer_user2() {
-		return timer_user2;
-	}
-
-	public void setTimer_user2(int timer_user2) {
-		this.timer_user2 = timer_user2;
 	}
 
 	public void setRoom_brandsList(String[] room_brandsList) {
@@ -1006,27 +806,11 @@ public class RoomBean {
 		this.victoryid = victoryid;
 	}
 
-	public int getRoom_state_a() {
-		return room_state_a;
-	}
-
-	public void setRoom_state_a(int room_state_a) {
-		this.room_state_a = room_state_a;
-	}
-
-	public int getBranker_number() {
-		return branker_number;
-	}
-
-	public void setBranker_number(int branker_number) {
-		this.branker_number = branker_number;
-	}
-
-	public int getDi_fen() {
+	public Double getDi_fen() {
 		return di_fen;
 	}
 
-	public void setDi_fen(int di_fen) {
+	public void setDi_fen(Double di_fen) {
 		this.di_fen = di_fen;
 	}
 
@@ -1062,22 +846,6 @@ public class RoomBean {
 		this.branker_ord = branker_ord;
 	}
 
-	public String[] getBrand_type() {
-		return brand_type;
-	}
-
-	public void setBrand_type(String[] brand_type) {
-		this.brand_type = brand_type;
-	}
-
-	public int getRule() {
-		return rule;
-	}
-
-	public void setRule(int rule) {
-		this.rule = rule;
-	}
-
 	public int getOrds() {
 		return ords;
 	}
@@ -1092,22 +860,6 @@ public class RoomBean {
 
 	public void setGame_state(int game_state) {
 		this.game_state = game_state;
-	}
-
-	public int getTimer_user3() {
-		return timer_user3;
-	}
-
-	public void setTimer_user3(int timer_user3) {
-		this.timer_user3 = timer_user3;
-	}
-
-	public int getTimer_user4() {
-		return timer_user4;
-	}
-
-	public void setTimer_user4(int timer_user4) {
-		this.timer_user4 = timer_user4;
 	}
 
 	/**

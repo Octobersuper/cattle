@@ -31,50 +31,22 @@ public class GameService extends Thread {
 	 * 创建房间
 	 *
 	 * @param map
-	 * @param userBean
+	 * @param
 	 * @return @throws
 	 */
-	public RoomBean Esablish(Map<String, String> map, UserBean userBean) {
+	public RoomBean Esablish(Map<String, String> map,String roomNumber) {
 		// 创建房间
-		RoomBean rb = CreatRoom.EcoSocket(map);
-		// 加入自己
-		rb.getGame_userList(0).add(userBean);
-		// 参与分
-		rb.setFen(Integer.parseInt(map.get("fen")));
+		RoomBean rb = CreatRoom.EcoSocket(roomNumber);
 		// 底分
-		rb.setDi_fen(Integer.parseInt(map.get("di_fen")));
+		rb.setDi_fen(Double.valueOf(map.get("di_fen")));
 		// 最大回合数
 		rb.setMax_number(Integer.parseInt(map.get("max_number")));
 		// 最大参与人数
-		rb.setFoundation(Integer.parseInt(map.get("foundation")));
-		// 初始化用户
-		userBean.Initialization();
-		// 规则
-		rb.setRule(Integer.parseInt(map.get("rule")));
-		// 牌型
-		String brand_type = String.valueOf(map.get("brand_type"));
-		rb.setBrand_type(brand_type.split("-"));
-
-		// 往座位添加用户
-		rb.setUser_positions(new int[rb.getFoundation()]);
-		for (int i = 0; i < rb.getUser_positions().length; i++) {
-			rb.getUser_positions()[i] = -1;
-		}
+		rb.setFoundation(8);
 		rb.setBranker_ord(0);
-		// 游戏类型
-		rb.setRoom_type(Integer.parseInt(map.get("room_type")));
-		userBean.setGametype(1);
-		/******************* 往记录类插入数据 ***************/
-		// record.setRoom_type(rb.getRoom_type());
-		//record.setFen(rb.getFen());
-		//record.setRoom_number(rb.getRoom_number());
-		//record.setRoom_id(userBean.getUserid());
-		//record.setDatetime(new Date());
-		// gd.SaveRoomInfo(record);
-		// gd.SaveRoomsInfo(rb);
 		// 房间计时器
-		rb.setTime_Room(new Time_Room(userBean, rb, this));
-		rb.getTime_Room().start();
+		//rb.setTime_Room(new Time_Room(userBean, rb, this));
+		//rb.getTime_Room().start();
 		return rb;
 	}
 
@@ -97,7 +69,6 @@ public class GameService extends Thread {
 	 */
 	public RoomBean UpdateRoom(Map<String, String> map, UserBean userBean, RoomBean rb) {
 		rb.setFoundation(Integer.parseInt(map.get("foundation")));
-		rb.setMinBets(Integer.parseInt(map.get("minBets")));
 		rb.setRoom_type(Integer.valueOf(map.get("room_type")));
 		return rb;
 	}
@@ -189,7 +160,7 @@ public class GameService extends Thread {
 	public List<Map<String, Object>> pkUser(int bets, UserBean user2, RoomBean rb) {
 		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		int money = 0;
+		Double money = 0.0;
 		int win = 0;
 		int win_brand_type = 0;
 		UserBean user1 = rb.getUserBean(rb.getBranker_id());
@@ -204,7 +175,7 @@ public class GameService extends Thread {
 			money = rb.getDi_fen() * odds * user2.getOdd() * rb.getOrds();
 			if (user1.getMoney() < money) { // 如果庄家不够赔的情况
 				//gd.UpdateUserMoney(rb.getBranker_id(), user1.getMoney(), 0);
-				user1.setMoney(0);
+				user1.setMoney(0.0);
 				//gd.UpdateUserMoney(user2.getUserid(), user1.getMoney(), 1);
 				user2.setMoney(user2.getMoney() + user1.getMoney());
 				// 设置赢家ID 赢的金额
@@ -229,7 +200,7 @@ public class GameService extends Thread {
 			money = rb.getDi_fen() * odds * user2.getOdd() * rb.getOrds();
 			if (user2.getMoney() < money) {
 				//gd.UpdateUserMoney(user2.getUserid(), user2.getMoney(), 0);
-				user2.setMoney(0);
+				user2.setMoney(0.0);
 				//gd.UpdateUserMoney(rb.getBranker_id(), user2.getMoney(), 1);
 				user1.setMoney(user1.getMoney() + user2.getMoney());
 				// 设置赢家ID 赢的金额
@@ -263,53 +234,8 @@ public class GameService extends Thread {
 			// Time_Room time_Room = new Time_Room(userBean, roomBean, this, gd,
 			// userDao);
 			roomBean.setRoom_state(2);
-			roomBean.setTimer_user(30);
 		}
 		roomBean.getLock().unlock();
-
-	}
-
-	/**
-	 * 開始游戲
-	 *
-	 */
-	public void Game_Start2(RoomBean roomBean2, UserBean userBean) {
-		roomBean2.getLock().lock();
-		if (roomBean2.getGame_userList().size() >= 2) {
-			roomBean2.setRoom_state(2);
-			roomBean2.setTimer_user2(20);
-			// roomBean2.setGame_number(roomBean2.getGame_number()+1);//回合数加1
-		}
-		roomBean2.getLock().unlock();
-
-	}
-
-	/**
-	 * 開始游戲
-	 *
-	 */
-	public void Game_Start3(RoomBean roomBean3, UserBean userBean) {
-		roomBean3.getLock().lock();
-		if (roomBean3.getGame_userList().size() >= 2) {
-			roomBean3.setRoom_state(2);
-			roomBean3.setTimer_user3(30);
-			// roomBean2.setGame_number(roomBean2.getGame_number()+1);//回合数加1
-		}
-		roomBean3.getLock().unlock();
-
-	}
-
-	/**
-	 * 開始游戲
-	 *
-	 */
-	public void Game_Start4(RoomBean roomBean2, UserBean userBean) {
-		roomBean2.getLock().lock();
-		if (roomBean2.getGame_userList().size() >= 2) {
-			roomBean2.setTimer_user4(20);
-			// roomBean2.setGame_number(roomBean2.getGame_number()+1);//回合数加1
-		}
-		roomBean2.getLock().unlock();
 
 	}
 
@@ -370,7 +296,6 @@ public class GameService extends Thread {
 				}
 				userBean.setGametype(1);
 				userBean.setUsertype(1);// 设置用户已坐下
-				userBean.setStart_money(userBean.getMoney());
 				return 0;
 			}
 		}

@@ -51,7 +51,11 @@ layui.use(['layer','table','laydate'],function(){
                         return d.backwater+"%";
                 }}
             ,{field: 'winodds', title: '游戏胜率',align:'center',width:100,sort:true,templet:function (d) {
-                    return d.winodds+"%";
+                    if(d.winodds=="-1"){
+                        return "<span>正常</span>";
+                    }else{
+                        return d.winodds+"%";
+                    }
                 }}
             ,{field: 'bankcard', title: '银行卡信息',align:'center',width:120,sort:true,templet:function (d) {
                     if(d.bankcard==null){

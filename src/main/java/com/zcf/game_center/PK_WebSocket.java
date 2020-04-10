@@ -106,24 +106,6 @@ public class PK_WebSocket {
 		System_Mess.system_Mess.ToMessagePrint("接收" + userBean.getNickname() + "的消息" + msg);
 		Map<String, String> jsonTo = gson.fromJson(msg, new TypeToken<Map<String, String>>() {
 		}.getType());
-		// 创建房间
-		if ("CreateRoom".equals(jsonTo.get("type"))) {
-			if (userBean.getMoney() < Integer.valueOf(jsonTo.get("fen"))) {
-				returnMap.put("state", "101");// 金币不足
-				returnMap.put("type", "CreateRoom");// 创建房间
-				returnMap.put("userid", userBean.getUserid());
-				sendMessageTo(returnMap);
-			} else {
-				rb = gs.Esablish(jsonTo, userBean);
-				returnMap.put("state", "102");// 创建房间成功
-				returnMap.put("type", "CreateRoom");// 创建房间
-				returnMap.put("userid", userBean.getUserid());
-				rb.getRoomBean_Custom("userid-nickname-avatarurl-money", returnMap,
-						"room_number-fen-user_positions-max_number-game_number-di_fen-foundation-room_type");
-				sendMessageTo(returnMap);
-				sendMessageToAll(returnMap, rb);
-			}
-		}
 
 		// 加入房间
 		if ("Matching".equals(jsonTo.get("type"))) {
@@ -230,7 +212,7 @@ public class PK_WebSocket {
 			int start_Game = rb.Start_Game(userBean, rb);
 			if (start_Game == 2) {
 				returnMap.put("type", "start_game");
-				returnMap.put("timer", rb.getTimer_user());
+				returnMap.put("timer",  rb.getTimes());
 				returnMap.put("room_number", rb.getGame_number());
 				returnMap.put("state", "2"); // 游戏开始成功
 			} else {
@@ -247,7 +229,7 @@ public class PK_WebSocket {
 			userBean.setOpen_brand(1);
 			int open_Brand_Count = gs.Open_Brand_Count(rb);
 			if (open_Brand_Count == 1) {
-				rb.setTimer_user(6);
+				//rb.setTimer_user(6);
 			}
 			returnMap.put("type", "open_brand");
 			returnMap.put("open_brand_count", open_Brand_Count); // 如果返回0则
@@ -269,66 +251,22 @@ public class PK_WebSocket {
 					user.setGametype(1);
 				}
 			}
-			if (rb.getRoom_state_a() == 1 || rb.getRoom_state_a() == 2 || rb.getRoom_state_a() == 3) {
+			if (rb.getRoom_state() == 1 || rb.getRoom_state() == 2 || rb.getRoom_state() == 3) {
 				rb.getRoomBean_Custom("id-wxname-wximg-money-gametype-brand-bets-betss-user_brand_type", returnMap,
 						"branker_id-room_number-game_number-room_type-koupai-user_positions");
 			} else {
 				rb.getRoomBean_Custom("id-wxname-wximg-money-gametype-brand-bets-betss-user_brand_type", returnMap,
 						"room_number-room_type-game_number-koupai-user_positions");
 			}
-			returnMap.put("timer", rb.getTimer_user());
+			returnMap.put("timer", rb.getTimes());
 			returnMap.put("type", "reconnection");
-			returnMap.put("room_state_a", rb.getRoom_state_a());
+			returnMap.put("room_state_a", rb.getRoom_state());
 			returnMap.put("game_number", rb.getGame_number());
 			sendMessageTo(returnMap);
 			returnMap.clear();
 			returnMap.put("id", userBean.getUserid());
 			returnMap.put("type", "reconnection");
 			sendMessageToAll(returnMap, rb);
-		}
-
-		// 下注
-		if ("bets".equals(jsonTo.get("type"))) {
-			// 下注
-			int bets = Integer.valueOf(jsonTo.get("bets"));
-			String betss = String.valueOf(jsonTo.get("betss"));
-			System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa:" + betss);
-			int id = Integer.valueOf(jsonTo.get("id"));
-			if (bets < 0) {
-				bets = userBean.getOnbets();
-			} else {
-				userBean.setBetss(betss);
-			}
-			userBean.setBet(bets);
-			userBean.setOnbets(bets);
-			rb.setBets(bets);
-			int money = 0;
-			if (bets != 0) {
-				money = bets;
-			} else {
-				money = rb.getMinBets();
-			}
-			returnMap.put("bets", userBean.getBet());
-			// 继续游戏
-			int state = gs.bets(money, userBean, rb);
-			//int newMoney = userDao.getMoney(id);
-			System_Mess.system_Mess.ToMessagePrint("(下注)房间状态" + state);
-			// 金币不足 || 已结算
-			if (state == 809) {
-				jsonTo.put("state", "809");// 金钱不足
-			} else if (state == 0) {
-				userBean.setMoney(userBean.getMoney() - money);
-				rb.getRoomBean_Custom("game_number", returnMap);
-				if (userBean.getBetss() != null) {
-					returnMap.put("betss", userBean.getBetss());
-				}
-				returnMap.put("type", "bets");
-				returnMap.put("id", userBean.getUserid());
-				//returnMap.put("money", newMoney * 100);
-				sendMessageTo(returnMap);
-				sendMessageToAll(returnMap, rb);
-			}
-
 		}
 
 		// 开牌
@@ -348,8 +286,6 @@ public class PK_WebSocket {
 			}
 
 			if (open == count) {
-				rb.setTimer_user(4);
-				System.out.println("时间---------------》" + rb.getTimer_user());
 				returnMap.put("type", "OpenBrand");
 				returnMap.put("brand", userBean.getBrand());
 				returnMap.put("id", userBean.getUserid());

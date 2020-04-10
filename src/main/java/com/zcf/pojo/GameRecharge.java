@@ -1,5 +1,6 @@
 package com.zcf.pojo;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -36,7 +37,7 @@ public class GameRecharge extends Model<GameRecharge> {
     /**
      * 操作时间
      */
-    private Date date;
+    private Date createtime;
     /**
      * 1充值记录  2提现记录
      */
@@ -46,6 +47,16 @@ public class GameRecharge extends Model<GameRecharge> {
      */
     private Integer state;
 
+    @TableField(exist = false)
+    private UserTable user;
+
+    public UserTable getUser() {
+        return user;
+    }
+
+    public void setUser(UserTable user) {
+        this.user = user;
+    }
 
     public Long getRechargeid() {
         return rechargeid;
@@ -71,12 +82,12 @@ public class GameRecharge extends Model<GameRecharge> {
         this.money = money;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreatetime() {
+        return createtime;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
     }
 
     public Integer getType() {
@@ -106,7 +117,7 @@ public class GameRecharge extends Model<GameRecharge> {
         "rechargeid=" + rechargeid +
         ", userid=" + userid +
         ", money=" + money +
-        ", date=" + date +
+        ", date=" + createtime +
         ", type=" + type +
         ", state=" + state +
         "}";

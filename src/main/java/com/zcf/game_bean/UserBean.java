@@ -32,21 +32,14 @@ public class UserBean {
 	private int Robbery;
 	// 用户手里的牌
 	private int[] brand = new int[] { -1, -1, -1, -1, -1 };
-	// 充值 0未充值 1已充值
-	private int isPay;
 	// 下注 （抢庄）
 	private int bet;
 	// 金币
-	private int money;
-	private int money_a;
-	// 续压注数
-	private int onbets;
-	// 续压参数
-	private String betss;
+	private Double money;
 	// 用户的牌型
 	private int user_brand_type;
 	// 当前局的输赢分数
-	private int winnum;
+	private double winnum;
 	// 当前局输赢状态
 	private int winType = 0;
 	// 胜利者ID
@@ -57,24 +50,14 @@ public class UserBean {
 	private int brandstatus = 0;
 	// 是否开牌
 	private int open_brand;
-	// 手机号
-	private String phone;
 	// 用户session
 	private Session session;
 	// 是否继续坐庄
 	private int branker_number;
 	// 庄家底分
 	private int user_fen;
-	// 是否开启作弊
-	private int type;
-	// 作弊牌型
-	private String[] Cheat;
-	// 作弊牌型id
-	private Long fId;
 	//闲家倍率
 	private int odd = 1;
-	//用户游戏之前的金额
-	private int start_money;
 	//用户输赢总金额
 	private int win_money;
 	//是否发起解散 0默认 1同意解散
@@ -101,8 +84,6 @@ public class UserBean {
 				map.put(user, gametype);
 			if (user.equals("brand"))
 				map.put(user, brand);
-			if (user.equals("isPay"))
-				map.put(user, isPay);
 			if (user.equals("money"))
 				map.put(user, money);
 			if (user.equals("bet"))
@@ -113,18 +94,10 @@ public class UserBean {
 				map.put(user, user_brand_type);
 			if (user.equals("branker_number"))
 				map.put(user, branker_number);
-			if (user.equals("type"))
-				map.put(user, type);
-			if (user.equals("Cheat"))
-				map.put(user, Cheat);
-			if (user.equals("fId"))
-				map.put(user, fId);
 			if (user.equals("brand_index"))
 				map.put(user, brand_index);
 			if (user.equals("odd"))
 				map.put(user, odd);
-			if (user.equals("start_money"))
-				map.put(user, start_money);
 			if (user.equals("win_money"))
 				map.put(user, win_money);
 		}
@@ -175,8 +148,6 @@ public class UserBean {
 		this.winId = 0;
 		// 底分
 		this.user_fen = 0;
-		// 初始化作弊牌型
-		this.Cheat = null;
 		this.Robbery = 0;
 		//初始化倍率
 		this.odd = 1;
@@ -251,11 +222,11 @@ public class UserBean {
 		this.brandstatus = brandstatus;
 	}
 
-	public int getWinnum() {
+	public Double getWinnum() {
 		return winnum;
 	}
 
-	public void setWinnum(int winnum) {
+	public void setWinnum(Double winnum) {
 		this.winnum = winnum;
 	}
 
@@ -273,14 +244,6 @@ public class UserBean {
 
 	public void setGametype(int gametype) {
 		this.gametype = gametype;
-	}
-
-	public int getIsPay() {
-		return isPay;
-	}
-
-	public void setIsPay(int isPay) {
-		this.isPay = isPay;
 	}
 
 	public int getUserid() {
@@ -315,21 +278,13 @@ public class UserBean {
 		this.brand = brand;
 	}
 
-	public int getMoney() {
+	public Double getMoney() {
 		return money;
 	}
 
-	public void setMoney(int money) {
+	public void setMoney(Double money) {
 		this.money = money;
 	}
-	public int getOnbets() {
-		return onbets;
-	}
-
-	public void setOnbets(int onbets) {
-		this.onbets = onbets;
-	}
-
 	public int getOpen_brand() {
 		return open_brand;
 	}
@@ -340,22 +295,6 @@ public class UserBean {
 
 	public int getUsertype() {
 		return usertype;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public String getBetss() {
-		return betss;
-	}
-
-	public void setBetss(String betss) {
-		this.betss = betss;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
 	}
 
 	public void setUsertype(int usertype) {
@@ -401,44 +340,12 @@ public class UserBean {
 	public void setUser_fen(int user_fen) {
 		this.user_fen = user_fen;
 	}
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	public String[] getCheat() {
-		return Cheat;
-	}
-
-	public void setCheat(String[] cheat) {
-		Cheat = cheat;
-	}
-
-	public Long getfId() {
-		return fId;
-	}
-
-	public void setfId(Long fId) {
-		this.fId = fId;
-	}
-
 	public int getRobbery() {
 		return Robbery;
 	}
 
 	public void setRobbery(int robbery) {
 		Robbery = robbery;
-	}
-
-	public int getMoney_a() {
-		return money_a;
-	}
-
-	public void setMoney_a(int money_a) {
-		this.money_a = money_a;
 	}
 
 	public int getBet() {
@@ -459,12 +366,6 @@ public class UserBean {
 	}
 	public void setOdd(int odd) {
 		this.odd = odd;
-	}
-	public int getStart_money() {
-		return start_money;
-	}
-	public void setStart_money(int start_money) {
-		this.start_money = start_money;
 	}
 	public int getWin_money() {
 		return win_money;
