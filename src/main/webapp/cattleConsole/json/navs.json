@@ -1,0 +1,17 @@
+{
+	"contentManagement": [
+		{
+			"title": "资讯管理",
+			"icon": "&#xe66c;",
+			"href": "page/information/information.html",
+			"spread": false
+		}, {
+			"title": "积分管理",
+			"icon": "&#xe65e",
+			"href": "page/integral/integral.html",
+			"spread": false
+		}
+	]
+}
+
+

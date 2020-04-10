@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>首页</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="../../css/public.css" media="all" />
+    <style type="text/css">
+        .ctolo{color: #007DDB;}
+    </style>
+</head>
+<body class="childrenBody">
+<blockquote class="layui-elem-quote layui-bg-green">
+    <div id="nowTime"></div>
+</blockquote>
+<blockquote class="layui-elem-quote quoteBox">
+    <div class="demoTable">
+        <div class="layui-form">
+        <div class="layui-inline">
+            <input class="layui-input" name="phone" placeholder="输入房间号" id="demoReload" autocomplete="off">
+        </div>
+
+            <div class="layui-input-inline">
+                <select name="quiz2" id="gameType">
+                    <option value="">请选择游戏类型</option>
+                    <option value="3" selected>全部</option>
+                    <option value="0">簸簸牛牛</option>
+                    <option value="1">经典牛牛</option>
+                    <option value="2">推筒子</option>
+                </select>
+            </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+
+        </div>
+    </div>
+</blockquote>
+<!--<blockquote class="layui-elem-quote quoteBox">
+    <form class="layui-form">
+        <div class="layui-inline">
+            <a class="layui-btn layui-btn-normal addLine_btn">添加用户</a>
+        </div>
+    </form>
+</blockquote>-->
+<div class="layui-row">
+
+    <input type="hidden" id="state">
+
+    <table id="demo" lay-filter="test"></table>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="let">详细信息</a>
+        <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+
+    </script>
+    <script type="text/html" id="createTime">
+        {{ timestampToTime(d.createTime) }}
+    </script>
+</div>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="record.js"></script>
+<script src="../../js/cache.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>首页</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" href="../../layui/css/layui.css" media="all" />
+	<link rel="stylesheet" href="../../css/public.css" media="all" />
+	<style type="text/css">
+		.ctolo{color: #007DDB;}
+	</style>
+</head>
+<body class="childrenBody">
+	<blockquote class="layui-elem-quote layui-bg-green">
+		<div id="nowTime"></div>
+	</blockquote>
+	<div class="layui-row">
+
+		<input type="hidden" id="state">
+	
+		<table id="demo" lay-filter="test"></table>
+		<script type="text/html" id="barDemo">
+		  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+			{{#  if(d.state==0){ }}
+			{{  }}
+			<a class="layui-btn layui-btn-container layui-btn-xs" lay-event="edit">同意</a>
+		    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit2">拒绝</a>
+			{{#  }
+			else { }}
+			{{#  } }}
+		</script>
+		<script type="text/html" id="createTime">
+			{{ timestampToTime(d.createtime) }}
+		</script>
+	</div>
+	<script type="text/javascript" src="../../layui/layui.js"></script>
+	<script type="text/javascript" src="promoters.js"></script>
+	<script src="../../js/cache.js"></script>
+<script>
+		function a(x) {
+			window.document.getElementById("state").value=x;
+        }
+</script>
+</body>
+</html>

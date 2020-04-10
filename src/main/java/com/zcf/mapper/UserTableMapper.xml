@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcf.mapper.UserTableMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcf.pojo.UserTable">
+        <id column="userid" property="userid" />
+        <result column="openid" property="openid" />
+        <result column="avatarurl" property="avatarurl" />
+        <result column="nickname" property="nickname" />
+        <result column="phone" property="phone" />
+        <result column="password" property="password" />
+        <result column="createtime" property="createtime" />
+        <result column="money" property="money" />
+        <result column="diamond" property="diamond" />
+        <result column="state" property="state" />
+        <result column="isLogin" property="isLogin" />
+        <result column="sex" property="sex" />
+        <result column="fId" property="fId" />
+        <result column="role" property="role" />
+        <result column="code" property="code" />
+        <result column="insure" property="insure" />
+        <result column="zfb" property="zfb" />
+        <result column="bankcard" property="bankcard" />
+        <result column="backwater" property="backwater" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        userid, openid, avatarurl, nickname, phone, password, createtime, money, diamond, state, isLogin, sex, fId, role, code, insure, zfb, bankcard, backwater
+    </sql>
+
+</mapper>
