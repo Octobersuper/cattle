@@ -22,7 +22,7 @@ import org.springframework.stereotype.Controller;
 @RequestMapping("/gameIntroduce")
 public class GameIntroduceController {
 
-    @Autowired
+    @Autowired 
     GameIntroduceServiceImpl gs;
 
     @GetMapping("get")
