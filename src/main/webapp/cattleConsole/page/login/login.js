@@ -11,8 +11,9 @@ layui.use(['form','layer','jquery'],function(){
 		  success: function(res){
 		  	if(res.meta.code == 200){
 		  		// 设置值
-			    sessionStorage.setItem('id', res.data.id);
+			    sessionStorage.setItem('backuserid', res.data.backuserid);
 			    sessionStorage.setItem('username', res.data.backname);
+                sessionStorage.setItem('account', res.data.account);
 //			    sessionStorage.setItem('password', res.data.password);
 			    // 取值
 		  		$("#loginBtn").text("登录中...").attr("disabled","disabled").addClass("layui-disabled");

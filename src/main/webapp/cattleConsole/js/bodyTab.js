@@ -35,7 +35,7 @@ layui.define(["element", "jquery"], function(exports) {
         }, {
             "title": "房间列表",
             "icon": "&#xe630;",
-            "href": "page/userCards/userCards.html",
+            "href": "page/rooms/room.html",
             "spread": false
         },{
             "title": "发送公告",
@@ -45,7 +45,7 @@ layui.define(["element", "jquery"], function(exports) {
         },{
             "title": "商城管理",
             "icon": "&#xe657;",
-            "href": "page/mall/mall.html",
+            "href": "page/shop/shop.html",
             "spread": false
 		},{
             "title": "提现管理",

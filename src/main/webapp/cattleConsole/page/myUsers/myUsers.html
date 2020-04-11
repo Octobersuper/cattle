@@ -16,64 +16,38 @@
 	</style>
 </head>
 <body class="childrenBody">
-	<blockquote class="layui-elem-quote layui-bg-green">
-		<div id="nowTime"></div>
-	</blockquote>
-	<blockquote class="layui-elem-quote quoteBox">
-			 <div class="demoTable">
-			 	 <div class="layui-inline">
-			  	  <input class="layui-input" name="phone" placeholder="输入手机号/昵称/ID" id="demoReload" autocomplete="off">
-			 	 </div>
-	  			<button class="layui-btn" data-type="reload">搜索</button>
-			</div>
-	</blockquote>
-	<!--<blockquote class="layui-elem-quote quoteBox">
-		<form class="layui-form">
-			<div class="layui-inline">
-				<a class="layui-btn layui-btn-normal addLine_btn">添加用户</a>
-			</div>
-		</form>
-	</blockquote>-->
-	<div class="layui-row">
+<blockquote class="layui-elem-quote layui-bg-green">
+	<div id="nowTime"></div>
+</blockquote>
+<div class="layui-row">
 
-		<input type="hidden" id="state">
-	
-		<table id="demo" lay-filter="test"></table>
-		<script type="text/html" id="barDemo">
-			<!--<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</a>-->
-			<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="myUsers">Ta的下级</a>
-		  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	<input type="hidden" id="state">
+	<input type="hidden" id="id">
 
-		</script>
-		<script type="text/html" id="barDemo2">
-			{{#  if(d.state==0){ }}
-			{{  }}
-			<input type="checkbox" checked="" name="open" lay-skin="switch" lay-filter="switchTest" lay-text="正常|冻结">
-			{{#  } else { }}
-			<input type="checkbox" name="close" lay-skin="switch" lay-even="show" lay-filter="switchTest" lay-text="正常|冻结">
-			{{#  } }}
+	<table id="demo" lay-filter="test"></table>
+	<script type="text/html" id="barDemo2">
+		{{#  if(d.state==0){ }}
+		{{  }}
+		<input type="checkbox" checked="" name="open" lay-skin="switch" lay-filter="switchTest" lay-text="正常|冻结">
+		{{#  } else { }}
+		<input type="checkbox" name="close" lay-skin="switch" lay-even="show" lay-filter="switchTest" lay-text="正常|冻结">
+		{{#  } }}
 
-		</script>
-		<script type="text/html" id="barDemo3">
-			{{#  if(d.isPay==1){ }}
-			{{  }}
-			<input type="checkbox" checked="" name="open" lay-skin="switch" lay-filter="switchTest1" lay-text="已充值|未充值">
-			{{#  } else { }}
-			<input type="checkbox" name="close" lay-skin="switch" lay-even="show1" lay-filter="switchTest1" lay-text="已充值|未充值">
-			{{#  } }}
-
-		</script>
-		<script type="text/html" id="createTime">
-			{{ timestampToTime(d.createtime) }}
-		</script>
-	</div>
-	<script type="text/javascript" src="../../layui/layui.js"></script>
-	<script type="text/javascript" src="myUsers.js"></script>
-	<script src="../../js/cache.js"></script>
+	</script>
+	<script type="text/html" id="createTime">
+		{{ timestampToTime(d.createtime) }}
+	</script>
+</div>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="myUsers.js"></script>
+<script src="../../js/cache.js"></script>
+<script type="text/html" id="showimg">
+	<img src= {{d.avatarurl}}>
+</script>
 <script>
-		function a(x) {
-			window.document.getElementById("state").value=x;
-        }
+    function a(x) {
+        window.document.getElementById("state").value=x;
+    }
 </script>
 </body>
 </html>

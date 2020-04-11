@@ -1,11 +1,14 @@
 package com.zcf.pojo;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 
 /**
@@ -40,6 +43,36 @@ public class Rooms extends Model<Rooms> {
      */
     private Integer jionfen;
 
+    @TableField(exist = false)
+    private int room_state;//当前房间状态  0空闲  1游戏中
+    @TableField(exist = false)
+    private int user_number;//当前房间人数
+    @TableField(exist = false)
+    private int game_number;//当前对战局数
+
+    public int getGame_number() {
+        return game_number;
+    }
+
+    public void setGame_number(int game_number) {
+        this.game_number = game_number;
+    }
+
+    public int getRoom_state() {
+        return room_state;
+    }
+
+    public void setRoom_state(int room_state) {
+        this.room_state = room_state;
+    }
+
+    public int getUser_number() {
+        return user_number;
+    }
+
+    public void setUser_number(int user_number) {
+        this.user_number = user_number;
+    }
 
     public Long getId() {
         return id;
@@ -49,6 +82,7 @@ public class Rooms extends Model<Rooms> {
         this.id = id;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     public Date getCreatetime() {
         return createtime;
     }

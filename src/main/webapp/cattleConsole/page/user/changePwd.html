@@ -16,11 +16,17 @@
 <form class="layui-form layui-row">
 	<div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
 		<div class="layui-input-block layui-red pwdTips">新密码必须两次输入一致才能提交</div>
-		<input type="hidden" name="id" id="uid" />
+		<input type="hidden" name="backuserid" value="1" id="uid" />
 		<div class="layui-form-item">
 			<label class="layui-form-label">用户名</label>
 			<div class="layui-input-block">
-				<input type="text" name="username" value="" autocomplete="off" lay-verify="required|username" class="layui-input uname">
+				<input type="text" name="backname" value="" autocomplete="off" lay-verify="required|username" class="layui-input uname">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">账号</label>
+			<div class="layui-input-block">
+				<input type="text" name="account" id="account" value="" autocomplete="off" lay-verify="required|account" class="layui-input account">
 			</div>
 		</div>
 		<div class="layui-form-item">

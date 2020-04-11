@@ -19,18 +19,16 @@ layui.use(['layer','table','laydate'],function(){
             {field: 'userid', title: 'ID',align:'center',fixed: 'left',width:100,sort:true}
             ,{field: 'nickname', title: '昵称',align:'center',width:100,sort:true}
             ,{field: 'avatarurl', title: '头像',align:'center',width:100, event: 'lookimg',templet:"#showimg"}
-            ,{field: 'insure', title: '保险箱余额',align:'center',width:120, event: 'setVb',sort:true,templet:function (d) {
-                    if(d.insure==null){
-                        return "<span>0.00</span>";
-                    }else{
-                        return d.insure+".00";
-                    }
+            ,{field: 'insure', title: '保险箱余额',align:'center',width:120, event: 'setVb',sort:true}
+            ,{field: 'money', title: '主钱包余额',event: 'setMoney',width:120,align:'center',sort:true}
+            ,{field: 'backwater', title: '反水比例',align:'center',width:100,event: 'setback',sort:true,templet:function (d) {
+                        return d.backwater+"%";
                 }}
-            ,{field: 'money', title: '主钱包余额',event: 'setMoney',width:120,align:'center',sort:true,templet:function (d) {
-                    if(d.money==null){
-                        return "<span>0.00</span>";
+            ,{field: 'winodds', title: '游戏胜率',align:'center',width:100,event: 'setwin',sort:true,templet:function (d) {
+                    if(d.winodds=="-1"){
+                        return "<span>正常</span>";
                     }else{
-                        return d.money+".00";
+                        return d.winodds+"%";
                     }
                 }}
             ,{field: 'fId', title: '上级ID',align:'center',width:100,sort:true,templet:function (d) {
@@ -45,16 +43,6 @@ layui.use(['layer','table','laydate'],function(){
                         return "<span>普通玩家</span>";
                     }else{
                         return "<span>代理</span>";
-                    }
-                }}
-            ,{field: 'backwater', title: '反水比例',align:'center',width:100,sort:true,templet:function (d) {
-                        return d.backwater+"%";
-                }}
-            ,{field: 'winodds', title: '游戏胜率',align:'center',width:100,sort:true,templet:function (d) {
-                    if(d.winodds=="-1"){
-                        return "<span>正常</span>";
-                    }else{
-                        return d.winodds+"%";
                     }
                 }}
             ,{field: 'bankcard', title: '银行卡信息',align:'center',width:120,sort:true,templet:function (d) {
@@ -72,8 +60,8 @@ layui.use(['layer','table','laydate'],function(){
                     }
                 }}
             ,{field: 'createTime', title: '创建时间',align:'center',width:200,sort:true, toolbar: '#createTime'}
-            ,{fixed: 'right',field: 'userType', title: '操作', width:100, align:'center', toolbar: '#barDemo2'} //这里的toolbar值是模板元素的选择器
-            ,{fixed: 'right',field: 'userType', title: '操作', width:150, align:'center', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器
+            ,{fixed: 'right',field: 'userType', title: '操作', width:100, align:'center',  event:"show",toolbar: '#barDemo2'} //这里的toolbar值是模板元素的选择器
+            ,{fixed: 'right',field: 'userType', title: '操作', width:200, align:'center', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器
         ]]
     });
     //监听工具条
@@ -119,10 +107,10 @@ layui.use(['layer','table','laydate'],function(){
             var index = layui.layer.open({
                 title: data.nickname+"的下级列表",
                 type: 2,
-                content: "xiaji.html",
+                content: "myUsers/myUsers.html",
                 success: function (layero, index) {
                     var body = layui.layer.getChildFrame('body', index);
-                    body.find("#id").val(data.id);
+                    body.find("#id").val(data.userid);
                     //console.log(data.activeTime)
                     setTimeout(function () {
                         layui.layer.tips('点击此处返回', '.layui-layer-setwin .layui-layer-close', {
@@ -136,19 +124,19 @@ layui.use(['layer','table','laydate'],function(){
             $(window).on("resize",function(){
                 layui.layer.full(index);
             })
-        }else if(layEvent === 'setVb'){//修改vB
+        }else if(layEvent === 'setVb'){//修改保险箱余额
             layer.prompt({
                 formType: 2
                 ,shadeClose:true
-                ,title: '修改 ['+ data.nickname +'] 的Vbi余额'
-                ,value: data.vBi
+                ,title: '修改 ['+ data.nickname +'] 的保险箱余额'
+                ,value: data.insure
             }, function(value, index){
                 layer.close(index);
-                var uinfo = {'id': data.id , "vBi" : value ,adminId:sessionStorage.getItem("id")}
+                var uinfo = {'userid': data.userid , "insure" : value }
                 //这里一般是发送修改的Ajax请求
                 $.ajax({
                     type: 'post',
-                    url: baseUrl+"/admin/update",
+                    url: baseUrl+"/userTable/update",
                     data: uinfo,
                     async:false,
                     dataType: 'json',
@@ -159,7 +147,7 @@ layui.use(['layer','table','laydate'],function(){
                             setTimeout(function(){ layer.msg(''+res.meta.msg+'',{icon:1,time:1000});index.closed}, 500);
                             setTimeout(function(){
                                 obj.update({
-                                    vBi: value
+                                    insure: value
                                 });
                             }, 1000);
                         }else{
@@ -178,11 +166,11 @@ layui.use(['layer','table','laydate'],function(){
                 ,value: data.money
             }, function(value, index){
                 layer.close(index);
-                var uinfo = {'id': data.id , "money" : value ,adminId:sessionStorage.getItem("id")}
+                var uinfo = {'userid': data.userid , "money" : value }
                 //这里一般是发送修改的Ajax请求
                 $.ajax({
                     type: 'post',
-                    url: baseUrl+"/admin/update",
+                    url: baseUrl+"/userTable/update",
                     data: uinfo,
                     async:false,
                     dataType: 'json',
@@ -204,19 +192,19 @@ layui.use(['layer','table','laydate'],function(){
                     }
                 });
             });
-        }else if(layEvent === 'setPassword'){//修改密码
+        }else if(layEvent === 'setwin'){
             layer.prompt({
                 formType: 2
                 ,shadeClose:true
-                ,title: '修改 ['+ data.nickname +'] 的登录密码'
-                ,value: data.password
+                ,title: '修改 ['+ data.nickname +'] 的游戏胜率'
+                ,value: data.winodds
             }, function(value, index){
                 layer.close(index);
-                var uinfo = {'id': data.id , "password" : value }
+                var uinfo = {'userid': data.userid , "winodds" : value }
                 //这里一般是发送修改的Ajax请求
                 $.ajax({
                     type: 'post',
-                    url: baseUrl+"/admin/update",
+                    url: baseUrl+"/userTable/update",
                     data: uinfo,
                     async:false,
                     dataType: 'json',
@@ -234,19 +222,23 @@ layui.use(['layer','table','laydate'],function(){
                     }
                 });
             });
-        }else if(layEvent === 'setTradePassword'){//修改支付密码
+        }else if(layEvent === 'setback'){//
+            if(data.role!=1){
+                layer.msg("代理才可以设置反水");
+                return;
+            }
             layer.prompt({
                 formType: 2
                 ,shadeClose:true
-                ,title: '修改 ['+ data.nickname +'] 的支付密码'
-                ,value: data.tradePassword
+                ,title: '修改 ['+ data.nickname +'] 的返水比例'
+                ,value: data.backwater
             }, function(value, index){
                 layer.close(index);
-                var uinfo = {'id': data.id , "tradePassword" : value }
+                var uinfo = {'userid': data.userid , "backwater" : value }
                 //这里一般是发送修改的Ajax请求
                 $.ajax({
                     type: 'post',
-                    url: baseUrl+"/admin/update",
+                    url: baseUrl+"/userTable/update",
                     data: uinfo,
                     async:false,
                     dataType: 'json',
@@ -255,7 +247,11 @@ layui.use(['layer','table','laydate'],function(){
                             //加载层
                             var index = layer.load(0, {shade: false,time:500} ); //0代表加载的风格，支持0-2
                             setTimeout(function(){ layer.msg(''+res.meta.msg+'',{icon:1,time:1000});index.closed}, 500);
-                            setTimeout(function(){ location.reload() }, 1000);
+                            setTimeout(function(){
+                                obj.update({
+                                    backwater: value
+                                });
+                            }, 1000);
                         }else{
                             //加载层
                             var index = layer.load(0, {shade: false,time:1000} ); //0代表加载的风格，支持0-2
@@ -265,60 +261,38 @@ layui.use(['layer','table','laydate'],function(){
                 });
             });
         }else if(layEvent === 'edit') { //编辑
-            var type = 0;
-            if (data.type==0){
-                type = 1;
+            var role = 0;
+            if (data.role==0){
+                role = 1;
             }
             //询问框
             layer.confirm('确定修改用户类型？', {
                 btn: ['确定','取消'] //按钮
             }, function(){
-                var uinfo = {'id': data.id , "type" : type }
+                var uinfo = {'userid': data.userid , "role" : role }
                 //这里一般是发送修改的Ajax请求
                 $.ajax({
                     type: 'post',
-                    url: baseUrl+"/manage/updateUser",
+                    url: baseUrl+"/userTable/update",
                     data: uinfo,
                     async:false,
                     dataType: 'json',
                     success: function(res){
-                        if(res.code==100){
+                        if(res.meta.code==200){
                             //加载层
                             var index = layer.load(0, {shade: false,time:500} ); //0代表加载的风格，支持0-2
-                            setTimeout(function(){ layer.msg(''+res.msg+'',{icon:1,time:1000});index.closed}, 500);
+                            setTimeout(function(){ layer.msg(''+res.meta.msg+'',{icon:1,time:1000});index.closed}, 500);
                             setTimeout(function(){ location.reload() }, 1000);
                         }else{
                             //加载层
                             var index = layer.load(0, {shade: false,time:1000} ); //0代表加载的风格，支持0-2
-                            setTimeout(function(){ layer.msg(''+res.msg+'',{icon:2,time:1000});index.closed}, 1000);
+                            setTimeout(function(){ layer.msg(''+res.meta.msg+'',{icon:2,time:1000});index.closed}, 1000);
                         }
                     }
                 });
             }, function(){
                 //取消
             });
-        }else if(layEvent === "editisAc"){
-            if(data.isAc===1){
-                var index = layui.layer.open({
-                    title: "审核",
-                    type: 2,
-                    content: "editisAc.html",
-                    success: function (layero, index) {
-                        var body = layui.layer.getChildFrame('body', index);
-                        body.find("#id").val(data.id);
-                        setTimeout(function () {
-                            layui.layer.tips('点击此处返回', '.layui-layer-setwin .layui-layer-close', {
-                                tips: 3
-                            });
-                        }, 500)
-                    }
-                });
-                layui.layer.full(index);
-                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-                $(window).on("resize",function(){
-                    layui.layer.full(index);
-                })
-            }
         }
     });
 
@@ -347,7 +321,7 @@ layui.use(['layer','table','laydate'],function(){
 
 
     //监听锁定操作
-    form.on('switch(switchTest)',function(formObj) {
+    layui.form.on('switch(switchTest)',function(formObj) {
         table.on('tool(test)',function(obj) {
             if (obj.event === 'show') {
                 if (formObj.elem.checked == true) {
@@ -359,8 +333,8 @@ layui.use(['layer','table','laydate'],function(){
             }
             $.ajax({
                 type: 'post',
-                url: baseUrl+"user/update",
-                data: {'id': obj.data.id , "state" : lock },
+                url: baseUrl+"userTable/update",
+                data: {'userid': obj.data.userid , "state" : lock },
                 async:false,
                 dataType: 'json',
                 success: function(res){

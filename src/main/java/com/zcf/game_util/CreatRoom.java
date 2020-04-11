@@ -20,16 +20,15 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class CreatRoom {
 
-    public static synchronized RoomBean EcoSocket(String room_number) {
-        while (true) {
-            if (Public_State.PKMap.get(room_number) == null) {
-                RoomBean rb = new RoomBean();
-                // 放入房间号
-                rb.setRoom_number(room_number);
-                // 把房间实例放入房间map
-                Public_State.PKMap.put(room_number, rb);
-                return rb;
-            }
+    public static RoomBean EcoSocket(String room_number) {
+        if (Public_State.PKMap.get(room_number) == null) {
+            RoomBean rb = new RoomBean();
+            // 放入房间号
+            rb.setRoom_number(room_number);
+            // 把房间实例放入房间map
+            Public_State.PKMap.put(room_number, rb);
+            return rb;
         }
+        return null;
     }
 }

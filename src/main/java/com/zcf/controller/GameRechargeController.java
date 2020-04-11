@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -82,12 +83,16 @@ public class GameRechargeController {
     @GetMapping("get")
     public Body get(GameRecharge gameRecharge) {
         EntityWrapper<GameRecharge> ew = new EntityWrapper<>();
-        ew.eq("userid", gameRecharge.getUserid()).eq("type", gameRecharge.getType()).orderBy("createtime", false);
+        if(gameRecharge.getType()==1){
+            ew.eq("userid", gameRecharge.getUserid()).eq("type",1).orderBy("createtime", false);
+        }else{
+            ew.eq("userid", gameRecharge.getUserid()).andNew().eq("type",2).or().eq("type",3).or().eq("type",4).orderBy("createtime", false);
+        }
         List<GameRecharge> list = gm.selectList(ew);
         if (list.size() != 0) {
             return Body.newInstance(list);
         }
-        return Body.BODY_451;
+        return Body.newInstance(451,"无数据");
     }
 
     /**

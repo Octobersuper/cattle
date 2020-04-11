@@ -67,12 +67,14 @@ public class DiamondShopController {
      */
     @GetMapping("getDiamondShop")
     public Body getDiamondShop(DiamondShop diamondShop){
-        List<DiamondShop> list = dsm.selectList(null);
+        EntityWrapper<DiamondShop> e = new EntityWrapper<>();
+        e.eq("state",1);
+        List<DiamondShop> list = dsm.selectList(e);
         if (list.size()!=0) {
             for (DiamondShop d:
                  list) {
                 EntityWrapper<GameDiamondShop> ew = new EntityWrapper<>();
-                ew.eq("state",1).eq("d_id",d.getId());
+                ew.eq("d_id",d.getId());
                 d.setList(gdsm.selectList(ew));
             }
             return Body.newInstance(list);

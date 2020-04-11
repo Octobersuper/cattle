@@ -49,7 +49,7 @@ public class UserTableController {
      *@Return:
      *@Date:2019/2/26
      */
-    @PostMapping("getUser")
+    @GetMapping("getUser")
     public Body getUser(UserTable user){
         return userService.getUser(user);
     }

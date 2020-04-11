@@ -5,7 +5,8 @@ layui.use(['form','layer'],function(){
 	
 	$(".uname").val(sessionStorage.getItem('username'))
 	$(".upwd").val(sessionStorage.getItem('password'))
-	$("#uid").val(sessionStorage.getItem('id'))
+	$("#uid").val(sessionStorage.getItem('backuserid'))
+    $("#account").val(sessionStorage.getItem('account'))
 	
     //添加验证规则
     form.verify({
@@ -28,7 +29,7 @@ layui.use(['form','layer'],function(){
     form.on("submit(changeuser)",function(data){
     	$.ajax({
 		  type: 'post',
-		  url: baseUrl+"admin/upduserinfo",
+		  url: baseUrl+"gameBacktable/update",
 		  data: data.field,
 		  dataType: 'json',
 		  success: function(res){

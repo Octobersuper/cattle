@@ -39,7 +39,7 @@ public class PkRecordTableController {
     @GetMapping("get")
     public Body get(PkRecordTable pt){
         EntityWrapper<PkRecordTable> e = new EntityWrapper<>();
-        e.eq("userid",pt.getUserid()).orderBy("createtime",false);
+        e.eq("userid",pt.getUserid()).orderBy("createdate",false);
         List<PkRecordTable> list = pm.selectList(e);
         if(list.size()!=0){
             return Body.newInstance(list);

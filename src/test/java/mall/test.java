@@ -8,7 +8,9 @@ package mall;
  * Time:15:47
  */
 public class test {
-    public static void main(String[] args) {
-        System.out.println(1);
+    public static void main(String[] args){
+    Double i = (Math.random()*9+1)*100000;
+        long round = Math.round(i);
+        System.out.println(String.valueOf(round));
     }
 }

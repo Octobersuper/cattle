@@ -67,8 +67,11 @@ public class UserTableServiceImpl extends ServiceImpl<UserTableMapper, UserTable
         }else{
             user.setCreatetime(new Date());
             user.insert();
+            EntityWrapper<UserTable> e = new EntityWrapper<>();
+            e.eq("openid", user.getOpenid());
+            UserTable users = user.selectOne(e);
+            return Body.newInstance(users);
         }
-        return Body.newInstance(1,"账号或密码错误");
     }
 
 
@@ -80,6 +83,9 @@ public class UserTableServiceImpl extends ServiceImpl<UserTableMapper, UserTable
         w.orderDesc(list1);
         if (user.getPhone()!=null&&user.getPhone()!=""){
             w.eq("phone",user.getPhone()).or().eq("nickname",user.getPhone()).or().eq("userid",user.getPhone());
+        }
+        if(user.getfId()!=null&&user.getfId()!=0){
+            w.eq("fId",user.getfId());
         }
         List<UserTable> list = um.selectPage(new Page<UserTable>(pageNum, pageSize), w);
         Integer count = um.selectCount(w);
