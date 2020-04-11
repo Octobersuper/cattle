@@ -1,4 +1,4 @@
-if(!sessionStorage.getItem("id")){
+if(!sessionStorage.getItem("backuserid")){
 	window.location.href = "./page/login/login.html";
 }
 var $,tab,dataStr,layer;
