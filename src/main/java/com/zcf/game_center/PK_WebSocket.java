@@ -109,7 +109,6 @@ public class PK_WebSocket {
 
 		// 加入房间
 		if ("Matching".equals(jsonTo.get("type"))) {
-
 			if (Public_State.PKMap.get(String.valueOf(jsonTo.get("room_number"))) == null) {
 				returnMap.put("state", "103");// 房间不存在
 				returnMap.put("type", "Matching");
@@ -139,7 +138,6 @@ public class PK_WebSocket {
 							"room_number-fen-user_positions-max_number-game_number-di_fen-foundation-room_type");
 					sendMessageToAll(returnMap, rb);
 					sendMessageTo(returnMap);
-
 				}
 			}
 			returnMap.clear();

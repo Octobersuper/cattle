@@ -25,7 +25,7 @@ public class RoomBean {
 	private int room_type;
 	// 房间号
 	private String room_number;
-	// 参与游戏的用户集合
+	// 房间内的用户集合
 	private List<UserBean> game_userList;
 	// 发牌集合
 	private List<UserBean> rb_List;
@@ -482,6 +482,15 @@ public class RoomBean {
 	public List<UserBean> getGame_userList(int type) {
 		// 返回本实例
 		if (type == 0) {
+			List<UserBean> list = new ArrayList<UserBean>();
+			for (UserBean userBean : game_userList) {
+				// 获取已经坐下的玩家
+				if (userBean.getUsertype()!=0) {
+					list.add(userBean);
+				}
+			}
+			return list;
+		}else if(type == 1){
 			return game_userList;
 		}
 		List<UserBean> list = new ArrayList<UserBean>();
