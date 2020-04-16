@@ -14,35 +14,43 @@
 </head>
 <body class="childrenBody">
 <div class="layui-row layui-col-space10 panel_box">
-    <form action="" class="layui-form">
-        <fieldset class="layui-elem-field layui-field-title" style="">
-            <legend>局数</legend>
-        </fieldset>
-        <div class="layui-form-item">
-            <div style="margin-left: 0" class="layui-input-block">
-                <input type="text" name="maxnumber" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <fieldset class="layui-elem-field layui-field-title" style="">
-            <legend>底分</legend>
-        </fieldset>
-        <div class="layui-form-item">
-            <div style="margin-left: 0" class="layui-input-block">
-                <input type="text" name="fen" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
-            </div>
-        </div>
 
-        <fieldset class="layui-elem-field layui-field-title" style="">
-            <legend>准入分</legend>
-        </fieldset>
+    <form class="layui-form layui-form-pane" action="">
         <div class="layui-form-item">
-            <div style="margin-left: 0" class="layui-input-block">
+            <label class="layui-form-label">最大局数</label>
+            <div class="layui-input-block">
+                <input type="text" name="maxnumber" lay-verify="required" value="999" disabled placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">准入分</label>
+            <div class="layui-input-block">
                 <input type="text" name="jionfen" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
 
+        <div class="layui-form-item">
+            <label class="layui-form-label">底分</label>
+            <div class="layui-input-block">
+                <select name="fen" lay-filter="aihao">
+                    <option value="0.2" selected="">0.2</option>
+                    <option value="0.5">0.5</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">房间类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="roomtype" value="0" title="抢庄牛牛" checked="">
+                <input type="radio" name="roomtype" value="1" title="癞子牛牛">
+            </div>
+        </div>
+
         <div class="layui-form-item center">
-            <a class="layui-btn layui-btn-sm" lay-filter="addNews" lay-submit><i class="layui-icon">&#xe609;</i>提交</a>
+            <a class="layui-btn" lay-filter="addNews" lay-submit><i class="layui-icon">&#xe609;</i>提交</a>
         </div>
     </form>
 

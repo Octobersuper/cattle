@@ -12,6 +12,7 @@ layui.use(['form','layer','layedit','laydate','upload'],function(){
                 formData.append('maxnumber', data.field.maxnumber);
                 formData.append('fen', data.field.fen);
                 formData.append('jionfen', data.field.jionfen);
+                formData.append('roomtype', data.field.roomtype);
                 $.ajax({
                     type: "post",
                     url: baseUrl+'rooms/insert',

@@ -13,7 +13,7 @@ layui.use(['layer','table','laydate'],function(){
         ,page: false //开启分页
         ,cols: [[ //表头
             {field: 'id', title: 'ID',align:'center',fixed: 'left',width:100,sort:true}
-            ,{field: 'name', title: '标题',align:'center', event: "setname",width:100,sort:true}
+            ,{field: 'name', title: '标题',align:'center'/*, event: "setname"*/,width:100,sort:true}
             ,{field: 'state', title: '状态',align:'center',width:100,sort:true,templet:function (d) {
                     if(d.state==1){
                         return "<span style='color: green'>已启用</span>";

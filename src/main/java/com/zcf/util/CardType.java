@@ -50,7 +50,7 @@ public class CardType {
      *
      * @Date:2019/3/14
      */
-    public static Boolean PkCard(int[] zj, int[] xj, RoomBean myRoom) {
+    public static boolean PkCard(int[] zj, int[] xj, RoomBean myRoom) {
         // 获取牌型进行比拼大小 牌型相同在比点数
         // 倍率：至尊5倍，豹子4倍，二八杠3倍，8点到9点半2倍，0点到7点半1倍。
         int zhuang = 0;
@@ -66,7 +66,7 @@ public class CardType {
             return true;
         } else if (xjCardType < zjCardType) {
             return false;
-        } else if (xjCardType == zjCardType) {// 牌型相同判断牌值
+        } else{// 牌型相同判断牌值
             if (xjCardType > 900) {// 同花顺
                 zhuang = lang(zj);// 判断花色
                 xian = lang(xj);
@@ -105,9 +105,8 @@ public class CardType {
                     return false;
                 }
             }
-
         }
-        return null;
+        return false;
     }
 
     /*
@@ -230,7 +229,7 @@ public class CardType {
      * 是否为同花顺子牛
      *
      * @param brand
-     * @param key
+     * @param
      * @return
      */
     public static int GodenFlower_L(int[] brand) {
@@ -898,35 +897,19 @@ public class CardType {
          * 翻倍规则：0.牛牛*3 、牛九*2、牛八*2 1.牛牛*4 、牛九*3、牛八*2、牛七*2 2.【疯狂加倍】牛牛*10~牛一*1
          * 、无牛*1
          */
-        int integer = 1;
         int odd = 1;
         int odds = getCardType(brand, myRoom);
-        switch (integer) {
-            case 0:
-                if (odds == 120) {
-                    return 3;
-                }
-                if (odds == 119) {
-                    return 2;
-                }
-                if (odds == 118) {
-                    return 1;
-                }
-                break;
-            case 1:
-                if (odds == 120) {
-                    return 4;
-                }
-                if (odds == 119) {
-                    return 3;
-                }
-                if (odds == 118) {
-                    return 2;
-                }
-                if (odds == 117) {
-                    return 2;
-                }
-                break;
+        if (odds == 120) {
+            return 4;
+        }
+        if (odds == 119) {
+            return 3;
+        }
+        if (odds == 118) {
+            return 2;
+        }
+        if (odds == 117) {
+            return 2;
         }
 
         /**

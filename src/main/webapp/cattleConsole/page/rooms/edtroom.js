@@ -13,6 +13,7 @@ layui.use(['form','layer','layedit','laydate','upload'],function(){
         formData.append('fen', data.field.fen);
         formData.append('jionfen', data.field.jionfen);
         formData.append('roomnumber', data.field.roomnumber);
+        formData.append('roomtype', data.field.roomtype);
         formData.append('id', data.field.id);
         $.ajax({
             type: "post",

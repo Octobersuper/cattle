@@ -42,6 +42,8 @@ public class Rooms extends Model<Rooms> {
      * 准入分
      */
     private Integer jionfen;
+    //房间类型
+    private Integer roomtype;
 
     @TableField(exist = false)
     private int room_state;//当前房间状态  0空闲  1游戏中
@@ -49,6 +51,14 @@ public class Rooms extends Model<Rooms> {
     private int user_number;//当前房间人数
     @TableField(exist = false)
     private int game_number;//当前对战局数
+
+    public Integer getRoomtype() {
+        return roomtype;
+    }
+
+    public void setRoomtype(Integer roomtype) {
+        this.roomtype = roomtype;
+    }
 
     public int getGame_number() {
         return game_number;

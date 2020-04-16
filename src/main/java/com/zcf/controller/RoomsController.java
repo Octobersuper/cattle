@@ -182,9 +182,12 @@ public class RoomsController {
                 for (Rooms room :
                         rooms) {
                     RoomBean roomBean = CreatRoom.EcoSocket(String.valueOf(room.getRoomnumber()));
-                    roomBean.setMax_number(room.getMaxnumber());
-                    roomBean.setJion_fen(room.getJionfen());
-                    roomBean.setDi_fen(room.getFen());
+                    if(roomBean!=null){
+                        roomBean.setMax_number(room.getMaxnumber());
+                        roomBean.setJion_fen(room.getJionfen());
+                        roomBean.setDi_fen(room.getFen());
+                        roomBean.setRoom_type(room.getRoomtype());
+                    }
                 }
             }
             try {

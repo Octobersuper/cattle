@@ -26,7 +26,7 @@ public class UserBean {
 	private String avatarurl;
 	// 游戏中的状态0默认1游戏中-1不可游戏 2掉线
 	private int gametype = -1;
-	// 用戶狀態 0默认 1坐下
+	// 用戶狀態 0默认 -1观战
 	private int usertype = 0;
 	// 是否抢庄 0不抢庄 1抢庄
 	private int Robbery;
@@ -64,7 +64,17 @@ public class UserBean {
 	private int jiesan;
 	//
 	private String brand_index = "-1";
-	
+	//当前所在几分场  默认全部 0
+	private Double fen_type;
+
+	public Double getFen_type() {
+		return fen_type;
+	}
+
+	public void setFen_type(Double fen_type) {
+		this.fen_type = fen_type;
+	}
+
 	/**
 	 * 
 	 * 获取自定义用户详细信息 @param table @param map @throws

@@ -40,6 +40,7 @@ public class UserTableServiceImpl extends ServiceImpl<UserTableMapper, UserTable
         UserTable user1 = user.selectById();
         if(user1!=null){
             BeanUtils.copyProperties(user1,userBean);
+            userBean.setUserid(Integer.valueOf(String.valueOf(uid)));
         }else{
             userBean = null;
         }

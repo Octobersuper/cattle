@@ -98,8 +98,8 @@ public class GameService extends Thread {
 	 */
 	public List<UserBean> getGuanZhan(RoomBean rb) {
 		ArrayList<UserBean> list = new ArrayList<UserBean>();
-		for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
-			UserBean bean = rb.getUserBean(rb.getGame_userList(0).get(i).getUserid());
+		for (int i = 0; i < rb.getGame_userList(1).size(); i++) {
+			UserBean bean = rb.getUserBean(rb.getGame_userList(1).get(i).getUserid());
 			if (bean.getUsertype() != 1) {
 				list.add(bean);
 			}
@@ -139,34 +139,31 @@ public class GameService extends Thread {
 	/**
 	 * 结算 @param id @param rb @return @throws
 	 */
-	public List<Map<String, Object>> EndGame(RoomBean rb, UserBean userBean) {
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
+	public Map<String, Object> EndGame(RoomBean rb, UserBean userBean) {
 		// 比牌
 		int bets = userBean.getBet();
 		// 执行比牌
-		list = this.pkUser(bets, userBean, rb);
+		Map<String, Object> map = this.pkUser(bets, userBean, rb);
 		// 往战绩详情表插入数据
-		int winid = (int) list.get(0).get("winid");
-		int winmoney = (int) list.get(0).get("money");
-		int win_brand_type = (int) list.get(0).get("win_brand_type");
+		int winid = (int) map.get("winid");
+		int winmoney = (int) map.get("money");
+		int win_brand_type = (int) map.get("win_brand_type");
 
-		return list;
+		return map;
 	}
 
 	/**
 	 * 比牌扣除金币 @param branker_brand @param user_brand @throws
 	 */
-	public List<Map<String, Object>> pkUser(int bets, UserBean user2, RoomBean rb) {
-		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+	public Map<String, Object> pkUser(int bets, UserBean user2, RoomBean rb) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		Double money = 0.0;
 		int win = 0;
 		int win_brand_type = 0;
-		UserBean user1 = rb.getUserBean(rb.getBranker_id());
+		UserBean user1 = rb.getUserBean(rb.getBranker_id());//庄家
 		// true闲家赢 false庄家赢
-		Boolean pkCard = CardType.PkCard(user1.getBrand(), user2.getBrand(), rb);
-		if (pkCard && user1.getMoney() > 0) { // 闲家赢
+		boolean pkCard = CardType.PkCard(user1.getBrand(), user2.getBrand(), rb);
+		if (pkCard) { // 闲家赢
 			int odds = CardType.getOdds(user2.getBrand(), rb);
 			System.out.println("odds:" + odds);
 			System.out.println("getDi_fen:" + rb.getDi_fen());
@@ -219,8 +216,7 @@ public class GameService extends Thread {
 			map.put("money", user1.getWinnum());
 			map.put("win_brand_type", user1.getUser_brand_type());
 		}
-		list.add(map);
-		return list;
+		return map;
 	}
 
 	/**

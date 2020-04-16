@@ -26,6 +26,13 @@ layui.use(['layer','table','laydate'],function(){
                         return "游戏中";
                     }
                 }}
+            ,{field: 'roomtype', title: '房间类型',align:'center',templet:function (d) {
+                    if(d.roomtype===0){
+                        return "抢庄牛牛";
+                    }else{
+                        return "癞子牛牛";
+                    }
+                }}
             ,{field: 'game_number', title: '对战局数',align:'center',templet:function (d) {
                    return d.game_number+"/"+d.maxnumber;
                 }}
@@ -72,8 +79,9 @@ layui.use(['layer','table','laydate'],function(){
                  body.find("#id").val(data.id);
                  body.find("#maxnumber").val(data.maxnumber);
                  body.find("#fen").val(data.fen);
-                 body.find("#roomnumber").val(data.roomnumber);
                  body.find("#jionfen").val(data.jionfen);
+                 body.find("#roomnumber").val(data.roomnumber);
+                 body.find(":radio[name='roomtype'][value='" + data.roomtype + "']").prop("checked", "checked");
                  setTimeout(function () {
                      layui.layer.tips('点击此处返回', '.layui-layer-setwin .layui-layer-close', {
                          tips: 3
