@@ -27,7 +27,7 @@
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="357">
-              <caret line="17" column="49" lean-forward="true" selection-start-line="17" selection-start-column="49" selection-end-line="17" selection-end-column="49" />
+              <caret line="17" column="49" selection-start-line="17" selection-start-column="49" selection-end-line="17" selection-end-column="49" />
             </state>
           </provider>
         </entry>
@@ -35,17 +35,17 @@
       <file leaf-file-name="shop.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/page/shop/shop.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
+            <state relative-caret-position="567">
               <caret line="27" column="78" selection-start-line="27" selection-start-column="74" selection-end-line="27" selection-end-column="78" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="shop.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="shop.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/page/shop/shop.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="22" column="18" lean-forward="true" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
+            <state relative-caret-position="567">
+              <caret line="27" column="11" lean-forward="true" selection-start-line="27" selection-start-column="11" selection-end-line="27" selection-end-column="11" />
               <folding>
                 <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
@@ -66,7 +66,7 @@
       <file leaf-file-name="room.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/page/rooms/room.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="546">
+            <state relative-caret-position="1701">
               <caret line="81" column="57" lean-forward="true" selection-start-line="81" selection-start-column="57" selection-end-line="81" selection-end-column="57" />
             </state>
           </provider>
@@ -81,10 +81,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="edtroom.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="edtroom.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/page/rooms/edtroom.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="609">
+            <state relative-caret-position="903">
               <caret line="43" column="14" lean-forward="true" selection-start-line="43" selection-start-column="14" selection-end-line="43" selection-end-column="14" />
             </state>
           </provider>
@@ -93,7 +93,7 @@
       <file leaf-file-name="addroom.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/page/rooms/addroom.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
+            <state relative-caret-position="1071">
               <caret line="51" column="43" selection-start-line="51" selection-start-column="43" selection-end-line="51" selection-end-column="43" />
             </state>
           </provider>
@@ -175,12 +175,12 @@
         <option value="$PROJECT_DIR$/page/user/changePwd.html" />
         <option value="$PROJECT_DIR$/js/index.js" />
         <option value="$PROJECT_DIR$/page/rooms/room.html" />
-        <option value="$PROJECT_DIR$/page/shop/shop.js" />
         <option value="$PROJECT_DIR$/page/rooms/addroom.html" />
         <option value="$PROJECT_DIR$/page/rooms/addroom.js" />
         <option value="$PROJECT_DIR$/page/rooms/edtroom.js" />
         <option value="$PROJECT_DIR$/page/rooms/room.js" />
         <option value="$PROJECT_DIR$/page/rooms/edtroom.html" />
+        <option value="$PROJECT_DIR$/page/shop/shop.js" />
       </list>
     </option>
   </component>
@@ -193,7 +193,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="226" />
     <option name="y" value="134" />
     <option name="width" value="1255" />
@@ -204,7 +204,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -256,6 +255,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -342,12 +342,14 @@
       <workItem from="1586912894435" duration="67000" />
       <workItem from="1586916614146" duration="3296000" />
       <workItem from="1586943981981" duration="617000" />
-      <workItem from="1586999112449" duration="3714000" />
+      <workItem from="1586999112449" duration="4313000" />
+      <workItem from="1587107391912" duration="619000" />
+      <workItem from="1587171812961" duration="12000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="193251000" />
+    <option name="totallyTimeSpent" value="194481000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -598,25 +600,14 @@
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
-          <caret line="17" column="49" lean-forward="true" selection-start-line="17" selection-start-column="49" selection-end-line="17" selection-end-column="49" />
+          <caret line="17" column="49" selection-start-line="17" selection-start-column="49" selection-end-line="17" selection-end-column="49" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/page/shop/shop.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
+        <state relative-caret-position="567">
           <caret line="27" column="78" selection-start-line="27" selection-start-column="74" selection-end-line="27" selection-end-column="78" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/page/shop/shop.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="22" column="18" lean-forward="true" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -629,7 +620,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/page/rooms/addroom.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
+        <state relative-caret-position="1071">
           <caret line="51" column="43" selection-start-line="51" selection-start-column="43" selection-end-line="51" selection-end-column="43" />
         </state>
       </provider>
@@ -643,7 +634,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/page/rooms/room.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="546">
+        <state relative-caret-position="1701">
           <caret line="81" column="57" lean-forward="true" selection-start-line="81" selection-start-column="57" selection-end-line="81" selection-end-column="57" />
         </state>
       </provider>
@@ -657,8 +648,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/page/rooms/edtroom.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="609">
+        <state relative-caret-position="903">
           <caret line="43" column="14" lean-forward="true" selection-start-line="43" selection-start-column="14" selection-end-line="43" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/page/shop/shop.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="567">
+          <caret line="27" column="11" lean-forward="true" selection-start-line="27" selection-start-column="11" selection-end-line="27" selection-end-column="11" />
+          <folding>
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

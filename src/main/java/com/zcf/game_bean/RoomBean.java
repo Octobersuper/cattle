@@ -493,7 +493,6 @@ public class RoomBean {
      * 获取房间内用户集合 type=0 返回实例 1返回过滤 @param type @return @throws
      */
     public List<UserBean> getGame_userList(int type) {
-        // 返回本实例
         if (type == 0) {
             List<UserBean> list = new ArrayList<UserBean>();
             for (UserBean userBean : game_userList) {
@@ -504,6 +503,7 @@ public class RoomBean {
             }
             return list;
         }
+        // 返回本实例
         return game_userList;
     }
 
@@ -610,9 +610,7 @@ public class RoomBean {
                 }
             }
             index = (int) (Math.random() * count);
-            // for (int i = 0; i < user.size(); i++) {
             rb.setBranker_id(user.get(index));
-            // }
         }
         UserBean bean = this.getUserBean(rb.getBranker_id());
         // 添加庄家到发牌集合
@@ -915,5 +913,27 @@ public class RoomBean {
             }
         }
         return map;
+    }
+
+    /**
+     *@ Author:ZhaoQi
+     *@ methodName:
+     *@ Params:判断是否全部开牌
+     *@ Description:
+     *@ Return:
+     *@ Date:2020/4/18
+     */
+    public boolean getUserBrandState() {
+        int count = 0;
+        for (UserBean user :
+                getGame_userList(0)) {
+            if (user.getOpen_brand() == 1) {
+                count++;
+            }
+        }
+        if(count==getGame_userList(0).size()){
+            return true;
+        }
+        return false;
     }
 }

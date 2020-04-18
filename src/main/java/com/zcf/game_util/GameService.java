@@ -146,7 +146,7 @@ public class GameService extends Thread {
 		Map<String, Object> map = this.pkUser(bets, userBean, rb);
 		// 往战绩详情表插入数据
 		int winid = (int) map.get("winid");
-		int winmoney = (int) map.get("money");
+		double winmoney = (double) map.get("money");
 		int win_brand_type = (int) map.get("win_brand_type");
 
 		return map;
@@ -286,10 +286,6 @@ public class GameService extends Thread {
 			if (rb.getUser_positions()[i] == -1) {
 				// 如果座位未满 则按顺序添加用户到座位
 				rb.getUser_positions()[i] = userBean.getUserid();
-				if (i == 0 && rb.getUser_positions()[i] == -1) {
-					// 第一个坐下的人拥有开始游戏的权限
-					rb.setRoom_branker(userBean.getUserid());
-				}
 				userBean.setGametype(1);
 				userBean.setUsertype(1);// 设置用户已坐下
 				return 0;

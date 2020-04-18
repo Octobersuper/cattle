@@ -26,9 +26,9 @@ public class UserBean {
 	private String avatarurl;
 	// 游戏中的状态0默认1游戏中-1不可游戏 2掉线
 	private int gametype = -1;
-	// 用戶狀態 0默认 -1观战
+	// 用戶狀態 0默认 1游戏中
 	private int usertype = 0;
-	// 是否抢庄 0不抢庄 1抢庄
+	// 是否抢庄 0不抢庄 其他：抢庄倍数
 	private int Robbery;
 	// 用户手里的牌
 	private int[] brand = new int[] { -1, -1, -1, -1, -1 };
@@ -57,7 +57,7 @@ public class UserBean {
 	// 庄家底分
 	private int user_fen;
 	//闲家倍率
-	private int odd = 1;
+	private int odd = 0;
 	//用户输赢总金额
 	private int win_money;
 	//是否发起解散 0默认 1同意解散

@@ -1,8 +1,6 @@
 package com.zcf.game_util;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.zcf.game_bean.Public_State;
 import com.zcf.game_bean.RoomBean;
@@ -19,9 +17,9 @@ public class Time_Room extends Thread {
     RoomBean rb;
     int timer = 0;
 
-    public Time_Room(UserBean userBean, RoomBean rb, GameService gs) {
+    public Time_Room(RoomBean rb, GameService gs) {
         this.rb = rb;
-        this.timer = 0;
+        this.timer = 30;
         this.gs = gs;
     }
 
@@ -35,21 +33,20 @@ public class Time_Room extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (rb == null) {
-                break;
+            //如果人数不足两人 countune
+            if(rb.getGame_userList(0).size()<2){
+                System_Mess.system_Mess.ToMessagePrint("人数不足----");
+                timer = 30;
+                continue;
             }
-            timer--;
-            rb.setTimes(timer);
-            System_Mess.system_Mess.ToMessagePrint("倒计时----------->" + timer);
-
-            if (timer == 25) {
+            if(timer==30){//倒计时五秒开始
                 PK_WebSocket socket = Public_State.getPkWebSocket();
                 if (socket == null) {
                     break;
                 } else {
                     returnMap.put("state", "0");
-                    returnMap.put("type", "start_game");
-                    returnMap.put("timer", timer);
+                    returnMap.put("type", "Start_game");
+                    returnMap.put("timer", 5);
                     rb.setBrands(1);
                     socket.sendMessageTo(returnMap);
                     socket.sendMessageToAll(returnMap, rb);
@@ -57,8 +54,45 @@ public class Time_Room extends Thread {
                 }
             }
 
-            // 24秒开始发牌
-            if (timer == 24) {
+            //抢庄阶段 选出庄家
+            if (timer == 20) {
+                rb.selectBranker_id(rb);
+                returnMap.put("state", "0");
+                returnMap.put("type", "getBranker");
+                returnMap.put("branker_id", rb.getBranker_id());
+                PK_WebSocket socket = Public_State.getPkWebSocket();
+                if (socket == null) {
+                    break;
+                } else {
+                    socket.sendMessageToAll(returnMap, rb);
+                    socket.sendMessageTo(returnMap);
+                }
+                returnMap.clear();
+            }
+
+            //闲家加倍阶段
+            if (timer == 15) {
+                PK_WebSocket socket = Public_State.getPkWebSocket();
+                if (socket == null) {
+                    break;
+                } else {
+                    for (UserBean user :
+                            rb.getGame_userList(0)) {
+                        if (user.getOdd()==0) {
+                            user.setOdd(1);
+                            returnMap.put("state", "0");// 抢庄操作成功
+                            returnMap.put("userid", user.getUserid());
+                            returnMap.put("type", "xian_ord");
+                            returnMap.put("ord", 1);
+                        }
+                    }
+                    socket.sendMessageToAll(returnMap, rb);
+                    socket.sendMessageTo(returnMap);
+                }
+            }
+
+            // 开始发牌
+            if (timer == 15) {
                 // 发牌
                 rb.GrantBrand(5, rb);
                 rb.setRoom_state(2);
@@ -76,12 +110,30 @@ public class Time_Room extends Thread {
                 returnMap.clear();
             }
 
-            //自定选庄阶段
-            if (timer == 19) {
-                rb.selectBranker_id(rb);
+            //判断是否所有人都开牌  都开牌就直接开牌
+            if(timer<15 && timer>8){
+                if(rb.getUserBrandState()){
+                    returnMap.put("state", "0");
+                    returnMap.put("type", "openCards");
+                    // returnMap.put("brand_list", rb.getRb_List());
+                    rb.getRoomBean_Custom("userid-brand-user_brand_type", returnMap, "");
+                    PK_WebSocket socket = Public_State.getPkWebSocket();
+                    if (socket == null) {
+                        break;
+                    } else {
+                        socket.sendMessageToAll(returnMap, rb);
+                        socket.sendMessageTo(returnMap);
+                    }
+                    returnMap.clear();
+                    timer = 7;
+                }
+            }
+            //开牌阶段
+            if (timer == 8) {
                 returnMap.put("state", "0");
-                returnMap.put("type", "getBranker");
-                returnMap.put("branker_id", rb.getBranker_id());
+                returnMap.put("type", "openCards");
+                // returnMap.put("brand_list", rb.getRb_List());
+                rb.getRoomBean_Custom("userid-brand-user_brand_type", returnMap, "");
                 PK_WebSocket socket = Public_State.getPkWebSocket();
                 if (socket == null) {
                     break;
@@ -92,15 +144,6 @@ public class Time_Room extends Thread {
                 returnMap.clear();
             }
 
-            //闲家加倍阶段
-            if (timer == 14) {
-
-            }
-            //开牌阶段
-            if (timer == 10) {
-
-            }
-
             // 结算
             if (timer == 5) {
                 for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
@@ -109,6 +152,7 @@ public class Time_Room extends Thread {
                         gs.EndGame(rb, bean);
                     }
                 }
+                returnMap.put("state", "0");
                 returnMap.put("type", "account");
                 rb.getRoomBean_Custom("userid-money-winnum-brand_index", returnMap, "");
                 //returnMap.put("list", list);
@@ -136,11 +180,14 @@ public class Time_Room extends Thread {
                         }
                     }
                     rb.setOrds(1);
-                    // break;
+                    timer = 30;
                 }
             }
-        }
 
+            timer--;
+            rb.setTimes(timer);
+            System_Mess.system_Mess.ToMessagePrint("倒计时----------->" + timer);
+        }
         System_Mess.system_Mess.ToMessagePrint("开始游戏线程结束");
 
     }
