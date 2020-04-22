@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -48,7 +49,9 @@ public class InsureRecordController {
         e.eq("userid",pt.getUserid()).orderBy("createtime",false);
         List<InsureRecord> list = im.selectList(e);
         if(list.size()!=0){
-            return Body.newInstance(list);
+            HashMap<Object, Object> map = new HashMap<>();
+            map.put("list", list);
+            return Body.newInstance(map);
         }
         return Body.newInstance(451,"无转存记录");
     }

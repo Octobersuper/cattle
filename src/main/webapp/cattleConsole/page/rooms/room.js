@@ -17,8 +17,10 @@ layui.use(['layer','table','laydate'],function(){
 	      	{field: 'id', title: 'ID',align:'center',width:80}
             ,{field: 'roomnumber', title: '房间号',align:'center'}
 	      	,{field: 'maxnumber', title: '局数',align:'center'}
+            ,{field: 'robot', title: '机器人数量',width:150,align:'center',event:"setRobot"}
             ,{field: 'fen', title: '底分',align:'center'}
             ,{field: 'jionfen', title: '准入分',align:'center'}
+            ,{field: 'water', title: '抽水比例',align:'center'}
             ,{field: 'room_state', title: '房间状态',align:'center',templet:function (d) {
                     if(d.room_state===0){
                         return "空闲";
@@ -69,7 +71,37 @@ layui.use(['layer','table','laydate'],function(){
 			  }
 			});
 	    });
-	  }else if(layEvent === 'edit') { //编辑
+	  }else if(layEvent === 'setRobot'){
+         layer.prompt({
+             formType: 2
+             ,shadeClose:true
+             ,title: '修改房间内机器人数量'
+             ,value: data.robot
+         }, function(value, index){
+             layer.close(index);
+             var uinfo = {'id': data.id , "robot" : value ,"roomnumber":data.roomnumber}
+             //这里一般是发送修改的Ajax请求
+             $.ajax({
+                 type: 'post',
+                 url: baseUrl+"/rooms/update",
+                 data: uinfo,
+                 async:false,
+                 dataType: 'json',
+                 success: function(res){
+                     if(res.meta.code==200){
+                         //加载层
+                         var index = layer.load(0, {shade: false,time:500} ); //0代表加载的风格，支持0-2
+                         setTimeout(function(){ layer.msg(''+res.meta.msg+'',{icon:1,time:1000});index.closed}, 500);
+                         setTimeout(function(){ location.reload() }, 1000);
+                     }else{
+                         //加载层
+                         var index = layer.load(0, {shade: false,time:1000} ); //0代表加载的风格，支持0-2
+                         setTimeout(function(){ layer.msg(''+res.meta.msg+'',{icon:2,time:1000});index.closed}, 1000);
+                     }
+                 }
+             });
+         });
+     }else if(layEvent === 'edit') { //编辑
          var index = layui.layer.open({
              title: "修改房间信息",
              type: 2,
@@ -81,6 +113,7 @@ layui.use(['layer','table','laydate'],function(){
                  body.find("#fen").val(data.fen);
                  body.find("#jionfen").val(data.jionfen);
                  body.find("#roomnumber").val(data.roomnumber);
+                 body.find("#water").val(data.water);
                  body.find(":radio[name='roomtype'][value='" + data.roomtype + "']").prop("checked", "checked");
                  setTimeout(function () {
                      layui.layer.tips('点击此处返回', '.layui-layer-setwin .layui-layer-close', {

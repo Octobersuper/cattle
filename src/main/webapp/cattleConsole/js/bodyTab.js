@@ -42,15 +42,25 @@ layui.define(["element", "jquery"], function(exports) {
             "icon": "&#xe667;",
             "href": "page/notic/notic.html",
             "spread": false
-        },{
+        }/*,{
             "title": "商城管理",
             "icon": "&#xe657;",
             "href": "page/shop/shop.html",
             "spread": false
-		},{
+		}*/,{
             "title": "提现管理",
             "icon": "&#xe65e;",
             "href": "page/promoters/promoters.html",
+            "spread": false
+        },{
+            "title": "机器人管理",
+            "icon": "&#xe770;",
+            "href": "page/robot/robot.html",
+            "spread": false
+        },{
+            "title": "牌型管理",
+            "icon": "&#xe656;",
+            "href": "page/card_type/card_type.html",
             "spread": false
         }]
 

@@ -58,7 +58,7 @@ public class RoomsController {
         }
         ew.orderBy("createtime",false);
         List<Rooms> list = rm.selectPage(new Page<Rooms>(pageNum, pageSize), ew);
-        Integer count = rm.selectCount(ew);
+        Integer count = rm.selectCount(null);
         if (list != null) {
             for (Rooms room :
                     list) {
@@ -153,6 +153,8 @@ public class RoomsController {
                 roomBean.setMax_number(rooms.getMaxnumber());
                 roomBean.setJion_fen(rooms.getJionfen());
                 roomBean.setDi_fen(rooms.getFen());
+                roomBean.setRoom_type(rooms.getRoomtype());
+                roomBean.setWater((double)rooms.getWater()/100);
                 break;
             }
         }
@@ -187,6 +189,7 @@ public class RoomsController {
                         roomBean.setJion_fen(room.getJionfen());
                         roomBean.setDi_fen(room.getFen());
                         roomBean.setRoom_type(room.getRoomtype());
+                        roomBean.setWater((double)room.getWater()/100);
                     }
                 }
             }

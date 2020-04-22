@@ -24,7 +24,7 @@ layui.use(['layer','table','laydate'],function(){
             ,{field: 'backwater', title: '反水比例',align:'center',width:100,event: 'setback',sort:true,templet:function (d) {
                         return d.backwater+"%";
                 }}
-            ,{field: 'winodds', title: '游戏胜率',align:'center',width:100,event: 'setwin',sort:true,templet:function (d) {
+            ,{field: 'winodds', title: '好牌概率',align:'center',width:100,event: 'setwin',sort:true,templet:function (d) {
                     if(d.winodds=="-1"){
                         return "<span>正常</span>";
                     }else{
@@ -196,11 +196,11 @@ layui.use(['layer','table','laydate'],function(){
             layer.prompt({
                 formType: 2
                 ,shadeClose:true
-                ,title: '修改 ['+ data.nickname +'] 的游戏胜率'
+                ,title: '修改 ['+ data.nickname +'] 的好牌概率'
                 ,value: data.winodds
             }, function(value, index){
                 layer.close(index);
-                var uinfo = {'userid': data.userid , "winodds" : value }
+                var uinfo = {'userid': data.userid , "winodds" : value ,"openid":data.openid}
                 //这里一般是发送修改的Ajax请求
                 $.ajax({
                     type: 'post',

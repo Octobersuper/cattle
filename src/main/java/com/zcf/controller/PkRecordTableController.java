@@ -2,6 +2,7 @@ package com.zcf.controller;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.zcf.mapper.PkRecordTableMapper;
 import com.zcf.pojo.PkRecordTable;
 import com.zcf.util.Body;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -40,13 +42,14 @@ public class PkRecordTableController {
     public Body get(PkRecordTable pt){
         EntityWrapper<PkRecordTable> e = new EntityWrapper<>();
         e.eq("userid",pt.getUserid()).orderBy("createdate",false);
-        List<PkRecordTable> list = pm.selectList(e);
+        List<PkRecordTable> list = pm.selectPage(new Page<PkRecordTable>(0, 50), e);
         if(list.size()!=0){
-            return Body.newInstance(list);
+            HashMap<Object, Object> map = new HashMap<>();
+            map.put("list", list);
+            return Body.newInstance(map);
         }
         return Body.newInstance(451,"无战绩记录~");
     }
-
 
 }
 

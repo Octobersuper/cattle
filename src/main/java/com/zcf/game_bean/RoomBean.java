@@ -3,16 +3,15 @@
  */
 package com.zcf.game_bean;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.zcf.game_util.GameService;
 import com.zcf.service.impl.UserTableServiceImpl;
 import com.zcf.util.CardType;
+
+import static sun.plugin2.os.windows.OSVERSIONINFOA.size;
 
 
 /**
@@ -68,10 +67,16 @@ public class RoomBean {
     private int game_state;
     //准入分
     private int jion_fen;
-    //赢的人
-    private ArrayList<Integer> win_list;
-    //输的人
-    private ArrayList<Integer> loser_list;
+    //房间抽水比例
+    private Double water;
+
+    public Double getWater() {
+        return water;
+    }
+
+    public void setWater(Double water) {
+        this.water = water;
+    }
 
     public int getJion_fen() {
         return jion_fen;
@@ -100,8 +105,6 @@ public class RoomBean {
         this.fen = 0;
         // 游戏状态
         this.game_state = 0;
-        win_list = new ArrayList<>();
-        loser_list = new ArrayList<>();
         // 初始化游戏房间信息
         Initialization();
 
@@ -192,7 +195,7 @@ public class RoomBean {
      * 返回某一个用户 @param i @return @throws
      */
     public UserBean getUserBean(int userid) {
-        for (UserBean userBean : getGame_userList(0)) {
+        for (UserBean userBean : getGame_userList(1)) {
             if (userBean.getUserid() == userid) {
                 return userBean;
             }
@@ -213,18 +216,19 @@ public class RoomBean {
      * 初始化房间
      */
     public void Initialization() {
-        win_list.clear();
-        loser_list.clear();
         // 初始化扑克牌
-        setBrands(1);
-        game_number = 1;
+        setBrands(1,room_type==0?0:1);
         // 初始化游戏未开始
         setRoom_state(0);
-        if (game_userList != null) {
-            // 初始化用户
-            for (UserBean userBean : game_userList) {
-                userBean.Initialization();
-            }
+        setRoom_state(0);
+        setGame_number(getGame_number() + 1);
+        setBranker_ord(0);
+        setBranker_id(0);
+        setOrds(1);
+        List<UserBean> list = getGame_userList(0);
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).Initialization();
+            list.get(i).setUsertype(1);
         }
         // 启用一个线程来开始游戏
         /*
@@ -386,14 +390,20 @@ public class RoomBean {
     /**
      * 初始化扑克牌
      */
-    public void setBrands(int number) {
+    public void setBrands(int number,int type) {
         StringBuffer brand = new StringBuffer();
-        for (int i = 0; i < 52 * number; i++) {
+        //不带大小王
+        int cards = 52;
+        if(type ==1){
+            cards = 54;
+        }
+        for (int i = 0; i <  cards* number; i++) {
             if (i > 0) {
                 brand.append("-");
             }
             brand.append(i);
         }
+
         this.brands = brand.toString();
     }
 
@@ -504,7 +514,18 @@ public class RoomBean {
             return list;
         }
         // 返回本实例
-        return game_userList;
+        if(type==1){
+            return game_userList;
+        }
+        // 返回观战的人
+        List<UserBean> list = new ArrayList<UserBean>();
+        for (UserBean userBean : game_userList) {
+            // 获取已经坐下的玩家
+            if (userBean.getUsertype() == 0) {
+                list.add(userBean);
+            }
+        }
+        return list;
     }
 
     /**
@@ -516,17 +537,50 @@ public class RoomBean {
         String[] brand = brands.split("-");
 
         // 正常发牌
-        for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
-            if (rb.getGame_userList(0).get(i).getUsertype() == 1) {
-                UserBean bean = getUserBean(rb.getGame_userList(0).get(i).getUserid());
+        List<UserBean> list = rb.getGame_userList(0);
+        Collections.reverse(list);
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUsertype() == 1) {
+                UserBean bean = getUserBean(list.get(i).getUserid());
                 if (bean == null) {
                     continue;
                 }
-                for (int j = 0; j < number; j++) {
-                    bean.setBrand(getBrand(), bean);
+                int num = new Random().nextInt(10);//随机数
+                String s = String.valueOf(bean.getWinodds());//玩家胜率
+                int c;
+                if(s.equals("100")){
+                    c = 10;
+                }else if(s.equals("-1")){
+                    c = -1;
+                }else if(Integer.valueOf(s)<10){
+                    c = Integer.valueOf(s.substring(0, 0));//玩家的概率
+                }else{
+                    c = Integer.valueOf(s.substring(0, 1));//玩家的概率
                 }
+                if(num<c){//获取随机好牌
+                    String card_type = new GameService().getCard_type();
+                    String[] split = card_type.split("-");
+                    for(int j=0;j<number;j++){
+                        Integer brands = Integer.valueOf(split[j]);
+                        String[] b = this.brands.split("-");
+                        if(Arrays.asList(b).contains(String.valueOf(brands))){
+                            RemoveBrand(brands,b);
+                            bean.setBrand(brands,bean);
+                        }else{
+                            brands = getBrand();
+                            bean.setBrand(brands,bean);
+                        }
+                    }
+                }else{//正常发牌
+                    for (int j = 0; j < number; j++) {
+                        bean.setBrand(getBrand(), bean);
+                    }
+                }
+
                 // 发完牌就获取牌型
                 bean.setUser_brand_type(bean.BrandCount(rb, bean.getBrand()));
+                //设置牌型倍率
+                bean.setOdds(CardType.getOdds(bean.getBrand(),rb));
                 CardType.BrandIndex(bean.getBrand(), bean);
             }
         }
@@ -873,41 +927,20 @@ public class RoomBean {
         this.game_state = game_state;
     }
 
-    /**
-     * 解散房间 @param rb @param userBean2 @throws
-     */
-    public int getJiesan(RoomBean rb, UserBean userBean2) {
-        int count = 0;
-        int count_a = 0;
-        for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
-            if (rb.getGame_userList(0).get(i).getUsertype() == 1 && rb.getGame_userList(0).get(i).getJiesan() == 1) {
-                count++;
-            }
-            if (rb.getGame_userList(0).get(i).getUsertype() == 1) {
-                count_a++;
-            }
-        }
-        if (count == count_a) {
-            return 1;
-        }
-        return 0;
-
-    }
-
     public List<Map<String, Object>> getrooms(Double difen,String table, String usertable) {
         List<Map<String, Object>> map = new ArrayList<>();
         for (String s : Public_State.PKMap.keySet()) {
             RoomBean room = Public_State.PKMap.get(s);
-            if(difen==null){
+            if(difen==0){
                 Map<String, Object> returnMap = new HashMap<>();
                 room.getRoomBean_Custom(table, returnMap);
-                returnMap.put("userList", room.getGame_userList(usertable));
+                returnMap.put("userlist", room.getGame_userList(usertable));
                 map.add(returnMap);
             }else{
                 if(room.getDi_fen().equals(difen)){
                     Map<String, Object> returnMap = new HashMap<>();
                     room.getRoomBean_Custom(table, returnMap);
-                    returnMap.put("userList", room.getGame_userList(usertable));
+                    returnMap.put("userlist", room.getGame_userList(usertable));
                     map.add(returnMap);
                 }
             }

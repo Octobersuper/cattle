@@ -11,6 +11,7 @@ import com.zcf.util.LayuiJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -77,7 +78,9 @@ public class DiamondShopController {
                 ew.eq("d_id",d.getId());
                 d.setList(gdsm.selectList(ew));
             }
-            return Body.newInstance(list);
+            HashMap<Object, Object> map = new HashMap<>();
+            map.put("list", list);
+            return Body.newInstance(map);
         }
         return Body.newInstance(451,"无数据");
     }

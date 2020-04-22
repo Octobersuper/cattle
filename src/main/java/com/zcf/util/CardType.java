@@ -145,9 +145,9 @@ public class CardType {
         if (GodenFlower_B(brand) != -1) {// 五花牛
             return GodenFlower_B(brand);
         }
-        if (GodenFlower_H(brand) != -1) {// 四花牛
+        /*if (GodenFlower_H(brand) != -1) {// 四花牛
             return GodenFlower_H(brand);
-        }
+        }*/
         if (GodenFlower_C(brand) != -1) {// 牛1~9
             return GodenFlower_C(brand);
         }
@@ -609,7 +609,6 @@ public class CardType {
                 }
             }
         }
-
         return GofenFlower;
     }
 
@@ -894,46 +893,77 @@ public class CardType {
      */
     public static int getOdds(int[] brand, RoomBean myRoom) {
         /**
-         * 翻倍规则：0.牛牛*3 、牛九*2、牛八*2 1.牛牛*4 、牛九*3、牛八*2、牛七*2 2.【疯狂加倍】牛牛*10~牛一*1
-         * 、无牛*1
-         */
+         *         牛一(1倍)
+         *         牛二(2倍)
+         *         牛三(3倍)
+         *         牛四(4倍)
+         *         牛五(5倍)
+         *         牛六(6倍)
+         *         牛七(7倍)
+         *         牛八(8倍)
+         *         牛九(9倍)
+         *         牛牛(10倍)
+         * */
         int odd = 1;
         int odds = getCardType(brand, myRoom);
         if (odds == 120) {
-            return 4;
+            return 10;
         }
         if (odds == 119) {
-            return 3;
+            return 9;
         }
         if (odds == 118) {
-            return 2;
+            return 8;
         }
         if (odds == 117) {
+            return 7;
+        }
+        if (odds == 116) {
+            return 6;
+        }
+        if (odds == 115) {
+            return 5;
+        }
+        if (odds == 114) {
+            return 4;
+        }
+        if (odds == 113) {
+            return 3;
+        }
+        if (odds == 112) {
             return 2;
+        }if (odds == 111) {
+            return 1;
         }
 
         /**
-         * 特殊牌型:顺子牛（5倍）、同花牛（6倍）、五花牛（5倍）、葫芦牛（7倍）、炸弹牛（8倍）、五小牛（9倍）、同花顺（10倍）
-         */
+         *         顺子牛(11倍)
+         *         五花牛(12倍)
+         *         同花牛(13倍)
+         *         葫芦牛（14倍）
+         *         炸弹牛（15倍）
+         *         五小牛（16倍）
+         *         同花顺（17倍）
+         * */
+        if (400 > odds && odds > 300)
+            return 11;
         if (500 > odds && odds > 400) {
-            return 6;
+            return 12;
         }
         if (600 > odds && odds > 500) {
-            return 6;
+            return 13;
         }
-        if (300 > odds && odds > 200) {
+        /*if (300 > odds && odds > 200) {
             return 4;
-        }
-        if (400 > odds && odds > 300)
-            return 5;
+        }*/
         if (700 > odds && odds > 600)
-            return 7;
-        if (900 > odds && odds > 800)
-            return 8;
+            return 14;
         if (800 > odds && odds > 700)
-            return 8;
+            return 15;
+        if (900 > odds && odds > 800)
+            return 16;
         if (odds > 900)
-            return 10;
+            return 17;
         return odd;
     }
 

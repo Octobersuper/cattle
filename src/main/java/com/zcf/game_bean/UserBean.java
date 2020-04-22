@@ -17,7 +17,7 @@ import javax.websocket.Session;
  * 
  */
 @SuppressWarnings("unused")
-public class UserBean {
+public class UserBean implements Comparable<UserBean> {
 	// 用户id
 	private int userid;
 	// 用户昵称
@@ -28,6 +28,10 @@ public class UserBean {
 	private int gametype = -1;
 	// 用戶狀態 0默认 1游戏中
 	private int usertype = 0;
+	//角色 0玩家  1代理
+	private int role;
+	//反水比例
+	private int backwater;
 	// 是否抢庄 0不抢庄 其他：抢庄倍数
 	private int Robbery;
 	// 用户手里的牌
@@ -60,12 +64,66 @@ public class UserBean {
 	private int odd = 0;
 	//用户输赢总金额
 	private int win_money;
-	//是否发起解散 0默认 1同意解散
-	private int jiesan;
-	//
 	private String brand_index = "-1";
 	//当前所在几分场  默认全部 0
 	private Double fen_type;
+	//用户胜率  默认-1
+	private int winodds;
+	//上局回顾 1-2-3-4-5/115/50
+	private String review;
+	//牌型倍率
+	private int odds;
+	//上级Id
+	private Long fId;
+
+
+	public Long getfId() {
+		return fId;
+	}
+
+	public void setfId(Long fId) {
+		this.fId = fId;
+	}
+
+	public int getBackwater() {
+		return backwater;
+	}
+
+	public void setBackwater(int backwater) {
+		this.backwater = backwater;
+	}
+
+	public int getOdds() {
+		return odds;
+	}
+
+	public void setOdds(int odds) {
+		this.odds = odds;
+	}
+
+	public String getReview() {
+		return review;
+	}
+
+	public void setReview(String review) {
+		this.review = review;
+	}
+
+	public int getRole() {
+		return role;
+	}
+
+	public void setRole(int role) {
+		this.role = role;
+	}
+
+	public int getWinodds() {
+		return winodds;
+	}
+
+	public void setWinodds(int winodds) {
+		this.winodds = winodds;
+	}
 
 	public Double getFen_type() {
 		return fen_type;
@@ -110,6 +168,8 @@ public class UserBean {
 				map.put(user, odd);
 			if (user.equals("win_money"))
 				map.put(user, win_money);
+			if (user.equals("review"))
+				map.put(user, review);
 		}
 	}
 	/**
@@ -383,11 +443,10 @@ public class UserBean {
 	public void setWin_money(int win_money) {
 		this.win_money = win_money;
 	}
-	public int getJiesan() {
-		return jiesan;
+
+	@Override
+	public int compareTo(UserBean o) {
+		int i = this.getWinodds()-o.getWinodds();
+		return i;//i>=0则该元素排在前面
 	}
-	public void setJiesan(int jiesan) {
-		this.jiesan = jiesan;
-	}
-	
 }

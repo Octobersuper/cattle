@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.zcf.game_bean.UserBean;
+import com.zcf.mapper.CardtypeMapper;
 import com.zcf.pojo.UserTable;
 import com.zcf.mapper.UserTableMapper;
 import com.zcf.service.UserTableService;
@@ -32,6 +33,8 @@ public class UserTableServiceImpl extends ServiceImpl<UserTableMapper, UserTable
 
     @Autowired
     UserTableMapper um;
+    @Autowired
+    CardtypeMapper cm;
 
     public UserBean selectByid(Long uid) {
         UserTable user = new UserTable();
@@ -124,4 +127,7 @@ public class UserTableServiceImpl extends ServiceImpl<UserTableMapper, UserTable
         return Body.BODY_451;
     }
 
+    public String getCard_type() {
+       return cm.getCard_type();
+    }
 }

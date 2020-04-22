@@ -1,6 +1,8 @@
 package com.zcf.controller;
 
 
+import com.zcf.game_bean.Public_State;
+import com.zcf.game_center.PK_WebSocket;
 import com.zcf.pojo.UserTable;
 import com.zcf.service.impl.UserTableServiceImpl;
 import com.zcf.util.Body;
@@ -91,8 +93,11 @@ public class UserTableController {
      */
     @PostMapping("update")
     public Body update(UserTable user){
-        if(user.getPassword()!=null){
-            user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
+        if(user.getWinodds()!=null){
+            PK_WebSocket socket = Public_State.clients.get(String.valueOf(user.getUserid()));
+            if (socket != null) {
+                socket.userBean.setWinodds(user.getWinodds());
+            }
         }
         boolean b = user.updateById();
         if (b){

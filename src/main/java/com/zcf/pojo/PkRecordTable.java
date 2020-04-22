@@ -31,11 +31,11 @@ public class PkRecordTable extends Model<PkRecordTable> {
     /**
      * 分数
      */
-    private Integer number;
+    private Double number;
     /**
      * 余额
      */
-    private String money;
+    private Double money;
     private Date createdate;
 
 
@@ -55,19 +55,19 @@ public class PkRecordTable extends Model<PkRecordTable> {
         this.userid = userid;
     }
 
-    public Integer getNumber() {
+    public Double getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(Double number) {
         this.number = number;
     }
 
-    public String getMoney() {
+    public Double getMoney() {
         return money;
     }
 
-    public void setMoney(String money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 

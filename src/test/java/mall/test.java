@@ -1,5 +1,8 @@
 package mall;
 
+import com.zcf.game_bean.RoomBean;
+import com.zcf.util.CardType;
+
 /**
  * Created with IDEA
  * author:ZhaoQ
@@ -9,8 +12,8 @@ package mall;
  */
 public class test {
     public static void main(String[] args){
-    Double i = (Math.random()*9+1)*100000;
-        long round = Math.round(i);
-        System.out.println(String.valueOf(round));
+        int[] cards = {12,25,11,2,6};
+        int i = CardType.backPatterns(cards, new RoomBean());
+        System.out.println(i);
     }
 }

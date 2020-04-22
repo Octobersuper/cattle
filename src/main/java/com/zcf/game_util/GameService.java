@@ -8,9 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.zcf.game_bean.RoomBean;
 import com.zcf.game_bean.UserBean;
+import com.zcf.pojo.UserTable;
+import com.zcf.service.impl.UserTableServiceImpl;
 import com.zcf.util.CardType;
+import org.springframework.web.context.ContextLoader;
 
 /**
  * @author guolele
@@ -21,6 +25,10 @@ import com.zcf.util.CardType;
 public class GameService extends Thread {
 	private RoomBean rb;
 	private UserBean userBean;
+
+	//用户数据处理
+	private UserTableServiceImpl us = (UserTableServiceImpl) ContextLoader.getCurrentWebApplicationContext().getBean(
+			"userService");
 
 	public GameService() {
 		this.rb = new RoomBean();
@@ -96,12 +104,18 @@ public class GameService extends Thread {
 	 *  观战用户集合  
 	 * @throws
 	 */
-	public List<UserBean> getGuanZhan(RoomBean rb) {
-		ArrayList<UserBean> list = new ArrayList<UserBean>();
+	public List<Map<String, Object>> getGuanZhan(RoomBean rb) {
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<>();
 		for (int i = 0; i < rb.getGame_userList(1).size(); i++) {
+			if(i>=6){
+				break;
+			}
 			UserBean bean = rb.getUserBean(rb.getGame_userList(1).get(i).getUserid());
 			if (bean.getUsertype() != 1) {
-				list.add(bean);
+				map = new HashMap<>();
+				bean.getUser_Custom("userid-nickname-avatarurl",map);
+				list.add(map);
 			}
 		}
 		return list;
@@ -144,11 +158,6 @@ public class GameService extends Thread {
 		int bets = userBean.getBet();
 		// 执行比牌
 		Map<String, Object> map = this.pkUser(bets, userBean, rb);
-		// 往战绩详情表插入数据
-		int winid = (int) map.get("winid");
-		double winmoney = (double) map.get("money");
-		int win_brand_type = (int) map.get("win_brand_type");
-
 		return map;
 	}
 
@@ -170,22 +179,39 @@ public class GameService extends Thread {
 			System.out.println("getOdd:" + user2.getOdd());
 			System.out.println("getOrds:" + rb.getOrds());
 			money = rb.getDi_fen() * odds * user2.getOdd() * rb.getOrds();
+			double waterMoney = money;
 			if (user1.getMoney() < money) { // 如果庄家不够赔的情况
-				//gd.UpdateUserMoney(rb.getBranker_id(), user1.getMoney(), 0);
+				money = user1.getMoney();//获取庄家剩下的钱
+				waterMoney = water(money,user2,rb);//抽水  剩下的钱给赢家
+
+				UserTable userTable = new UserTable();
+				userTable.setUserid((long)user1.getUserid());
+				userTable.setMoney(0.0);
+				userTable.updateById();
 				user1.setMoney(0.0);
-				//gd.UpdateUserMoney(user2.getUserid(), user1.getMoney(), 1);
-				user2.setMoney(user2.getMoney() + user1.getMoney());
+
+				user2.setMoney(user2.getMoney() + waterMoney);
+				userTable.setUserid((long)user2.getUserid());
+				userTable.setMoney(user2.getMoney());
+				userTable.updateById();
 				// 设置赢家ID 赢的金额
-				user2.setWinnum(user1.getMoney());
-				user1.setWinnum(0 - user1.getMoney());
+				user2.setWinnum(waterMoney);
+				user1.setWinnum(-money);
 			} else {
-				//gd.UpdateUserMoney(rb.getBranker_id(), money, 0);
+				waterMoney = water(money,user2,rb);//抽水  剩下的钱进行结算
 				user1.setMoney(user1.getMoney() - money);
-				//gd.UpdateUserMoney(user2.getUserid(), money, 1);
-				user2.setMoney(user2.getMoney() + money + user2.getBet());
+				UserTable userTable = new UserTable();
+				userTable.setUserid((long)user1.getUserid());
+				userTable.setMoney(user1.getMoney());
+				userTable.updateById();
+
+				user2.setMoney(user2.getMoney() + waterMoney);
+				userTable.setUserid((long)user2.getUserid());
+				userTable.setMoney(user2.getMoney());
+				userTable.updateById();
 				// 设置赢家ID 赢的金额
-				user2.setWinnum(money);
-				user1.setWinnum(0 - money);
+				user2.setWinnum(waterMoney);
+				user1.setWinnum(-money);
 			}
 			map.put("winid", user2.getUserid());
 			map.put("money", user2.getWinnum());
@@ -195,28 +221,75 @@ public class GameService extends Thread {
 		} else {// 庄家赢
 			int odds = CardType.getOdds(user1.getBrand(), rb);
 			money = rb.getDi_fen() * odds * user2.getOdd() * rb.getOrds();
+			double waterMoney = money;
 			if (user2.getMoney() < money) {
-				//gd.UpdateUserMoney(user2.getUserid(), user2.getMoney(), 0);
+				money = user2.getMoney();//获取闲家剩下的钱
+				waterMoney = water(money,user1,rb);//抽水  剩下的钱进行结算
+				UserTable userTable = new UserTable();
+				userTable.setUserid((long)user2.getUserid());
+				userTable.setMoney(0.0);
+				userTable.updateById();
 				user2.setMoney(0.0);
-				//gd.UpdateUserMoney(rb.getBranker_id(), user2.getMoney(), 1);
-				user1.setMoney(user1.getMoney() + user2.getMoney());
+
+				user1.setMoney(user1.getMoney() + waterMoney);
+				userTable.setUserid((long)user1.getUserid());
+				userTable.setMoney(user1.getMoney());
+				userTable.updateById();
 				// 设置赢家ID 赢的金额
-				user1.setWinnum(user2.getMoney());
-				user2.setWinnum(0 - user2.getMoney());
+				user1.setWinnum(waterMoney);
+				user2.setWinnum(-money);
 			} else {
-				//gd.UpdateUserMoney(rb.getBranker_id(), money, 1);
-				user1.setMoney(user1.getMoney() + money);
-				//gd.UpdateUserMoney(user2.getUserid(), money, 0);
+				waterMoney = water(money,user1,rb);//抽水  剩下的钱进行结算
 				user2.setMoney(user2.getMoney() - money);
+				UserTable userTable = new UserTable();
+				userTable.setUserid((long)user2.getUserid());
+				userTable.setMoney(user2.getMoney());
+				userTable.updateById();
+
+				user1.setMoney(user1.getMoney() + waterMoney);
+				userTable.setUserid((long)user1.getUserid());
+				userTable.setMoney(user1.getMoney());
+				userTable.updateById();
 				// 设置赢家ID 赢的金额
-				user1.setWinnum(money);
-				user2.setWinnum(0 - money);
+				user1.setWinnum(waterMoney);
+				user2.setWinnum(-money);
 			}
 			map.put("winid", user1.getUserid());
 			map.put("money", user1.getWinnum());
 			map.put("win_brand_type", user1.getUser_brand_type());
 		}
 		return map;
+	}
+
+	/**
+	 *@ Author:ZhaoQi
+	 *@ methodName:
+	 *@ Params:抽水
+	 *@ Description:
+	 *@ Return:
+	 *@ Date:2020/4/22
+	 */
+	private double water(Double money, UserBean user, RoomBean rb) {
+		Double roomWater = rb.getWater();//房间抽水比例
+		double m = money * roomWater;//抽水钱数
+		System.out.println("抽水总钱数："+m);
+		//查询赢的玩家有没有上级 有的话给上级反水
+		if(user.getfId()!=0){
+			UserTable userTable = new UserTable();
+			EntityWrapper<UserTable> ew = new EntityWrapper<>();
+			ew.eq("userid",user.getfId());
+			UserTable fuji = userTable.selectOne(ew);
+			if (fuji != null) {
+				double f = (double)fuji.getBackwater()/100;//父级反水比例
+				System.out.println("父级反水比例百分比："+fuji.getBackwater());
+				System.out.println("父级反水比例："+f);
+				double f_money = m * f;
+				System.out.println("父级反水钱数："+f_money);
+				fuji.setMoney(fuji.getMoney()+f_money);
+				fuji.updateById();
+			}
+		}
+		return money-m;
 	}
 
 	/**
@@ -328,4 +401,7 @@ public class GameService extends Thread {
 		return 0; // 如果没全部做亮牌操作 则返回0
 	}
 
+	public String getCard_type() {
+		return us.getCard_type();
+	}
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -90,7 +91,9 @@ public class GameRechargeController {
         }
         List<GameRecharge> list = gm.selectList(ew);
         if (list.size() != 0) {
-            return Body.newInstance(list);
+            HashMap<Object, Object> map = new HashMap<>();
+            map.put("list", list);
+            return Body.newInstance(map);
         }
         return Body.newInstance(451,"无数据");
     }

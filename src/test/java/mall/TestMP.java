@@ -23,7 +23,7 @@ public class TestMP {
 		GlobalConfig config = new GlobalConfig();
 		config.setActiveRecord(true) // 是否支持AR模式
 				.setAuthor("ZhaoQi") // 作者
-				.setOutputDir("D:\\zq\\牛牛\\项目\\cattle\\src\\main\\java") // 生成路径
+				.setOutputDir("C:\\Users\\Administrator\\Desktop\\开发的项目\\新建文件夹\\项目\\cattle\\cattle\\src\\main\\java") // 生成路径
 				.setFileOverride(true)  // 文件覆盖D:\\workspace_mp\\mp03\\src\\main\\java
 				.setIdType(IdType.AUTO) // 主键策略
 				.setServiceName("%sService")  // 设置生成的service接口的名字的首字母是否为I
@@ -43,7 +43,7 @@ public class TestMP {
 		StrategyConfig stConfig = new StrategyConfig();
 		stConfig.setCapitalMode(true) //全局大写命名
 				.setDbColumnUnderline(true)  // 指定表名 字段名是否使用下划线
-				.setNaming(NamingStrategy.underline_to_camel).setInclude("rooms");  // 数据库表映射到实体的命名策略
+				.setNaming(NamingStrategy.underline_to_camel).setInclude("robot");  // 数据库表映射到实体的命名策略
 //				.setTablePrefix("tbl_")
 		// 生成的表
 

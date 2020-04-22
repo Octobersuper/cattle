@@ -44,6 +44,10 @@ public class Rooms extends Model<Rooms> {
     private Integer jionfen;
     //房间类型
     private Integer roomtype;
+    //机器人数量
+    private Integer robot;
+    //抽水比例
+    private Integer water;
 
     @TableField(exist = false)
     private int room_state;//当前房间状态  0空闲  1游戏中
@@ -51,6 +55,22 @@ public class Rooms extends Model<Rooms> {
     private int user_number;//当前房间人数
     @TableField(exist = false)
     private int game_number;//当前对战局数
+
+    public Integer getWater() {
+        return water;
+    }
+
+    public void setWater(Integer water) {
+        this.water = water;
+    }
+
+    public Integer getRobot() {
+        return robot;
+    }
+
+    public void setRobot(Integer robot) {
+        this.robot = robot;
+    }
 
     public Integer getRoomtype() {
         return roomtype;
