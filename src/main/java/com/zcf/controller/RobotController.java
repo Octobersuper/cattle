@@ -112,6 +112,21 @@ public class RobotController {
     public Body update(Robot robot){
         boolean b = robot.updateById();
         if(b){
+            Robot select = robot.selectById();
+            for(Map.Entry<String, RoomBean> entry : Public_State.PKMap.entrySet()){
+                RoomBean r = entry.getValue();
+                List<UserBean> list = r.getGame_userList(0);
+                if(list.size()!=0){
+                    for (UserBean user :
+                            list) {
+                        if (user.getUserid()==select.getId()) {
+                            user.setNickname(select.getName());
+                            user.setAvatarurl(select.getImg());
+                            user.setWinodds(select.getWinodds());
+                        }
+                    }
+                }
+            }
             return Body.BODY_200;
         }
         return Body.BODY_451;
@@ -131,7 +146,7 @@ public class RobotController {
             String path = request.getSession().getServletContext().getRealPath("robot");
             String targetFileName = iFileService.upload(file,path);
             targetFileName = "/robot/"+targetFileName;
-            robot.setImg(targetFileName);
+            robot.setImg("http://192.168.31.83:8080/cattle/"+targetFileName);
             boolean b = robot.insert();
             if(b){
                 return  Body.BODY_200;

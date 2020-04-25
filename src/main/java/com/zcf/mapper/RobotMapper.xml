@@ -14,4 +14,9 @@
         id, name, img
     </sql>
 
+    <select id="getRodom" resultMap="BaseResultMap">
+        SELECT t1.* FROM  robot  AS t1  JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id)      FROM `robot`)-(SELECT MIN(id) FROM robot))+(SELECT MIN(id) FROM      robot))
+                                                         AS id) AS t2 WHERE t1.id >= t2.id ORDER BY t1.id LIMIT 1
+    </select>
+
 </mapper>

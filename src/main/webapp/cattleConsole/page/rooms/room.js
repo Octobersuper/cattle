@@ -16,8 +16,9 @@ layui.use(['layer','table','laydate'],function(){
 	    ,cols: [[ //表头
 	      	{field: 'id', title: 'ID',align:'center',width:80}
             ,{field: 'roomnumber', title: '房间号',align:'center'}
-	      	,{field: 'maxnumber', title: '局数',align:'center'}
+	      	/*,{field: 'maxnumber', title: '局数',align:'center'}*/
             ,{field: 'robot', title: '机器人数量',width:150,align:'center',event:"setRobot"}
+            ,{field: 'user_number', title: '房间人数',align:'center'}
             ,{field: 'fen', title: '底分',align:'center'}
             ,{field: 'jionfen', title: '准入分',align:'center'}
             ,{field: 'water', title: '抽水比例',align:'center'}
@@ -36,9 +37,8 @@ layui.use(['layer','table','laydate'],function(){
                     }
                 }}
             ,{field: 'game_number', title: '对战局数',align:'center',templet:function (d) {
-                   return d.game_number+"/"+d.maxnumber;
+                   return d.game_number+"/不限局数";
                 }}
-            ,{field: 'user_number', title: '房间人数',align:'center'}
 	      	,{field: 'createTime', title: '创建时间',align:'center',sort:true, toolbar: '#createTime'}
 	        ,{fixed: 'right',field: 'userType', title: '操作', width:150, align:'left', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器
 	    ]]

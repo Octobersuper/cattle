@@ -3,7 +3,11 @@ package com.zcf.util;
 import com.zcf.game_bean.RoomBean;
 import com.zcf.game_bean.UserBean;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * writer: ZQ Time: 2018-11-28 Intent: 牌型计算工具类
@@ -57,8 +61,9 @@ public class CardType {
         int xian = 0;
         int xjk1 = GodenFlower_D(xj);// 没牛返回最大值
         int zjk2 = GodenFlower_D(zj);
-        int zjCardType = getCardType(zj, myRoom);// 庄家牌型
-        int xjCardType = getCardType(xj, myRoom);// 闲家牌型
+
+        int zjCardType = getUserCardType(zj, myRoom);// 庄家牌型
+        int xjCardType = getUserCardType(xj, myRoom);// 闲家牌型
 
         System.out.println(zjCardType);
         System.out.println(xjCardType);
@@ -109,6 +114,54 @@ public class CardType {
         return false;
     }
 
+    private static int getUserCardType(int[] brand, RoomBean myRoom) {
+        ArrayList<Integer> list = new ArrayList<>();
+        List<Integer> ints = Arrays.stream(brand).boxed().collect(Collectors.toList());
+        int index_s;//小王的小标
+        int index_S;//大王的下标
+        if (ints.contains(52) && ints.contains(53)) {
+            index_s = ints.indexOf(52);
+            index_S = ints.indexOf(53);
+            for (int i = 0; i < 52; i++) {
+                int[] card_copy = new int[5];
+                System.arraycopy(brand, 0, card_copy, 0, 5);
+                card_copy[index_s] = i;
+                for (int j = i; j < 52; j++) {
+                    System.arraycopy(brand, 0, card_copy, 0, 5);
+                    card_copy[index_s] = i;
+                    card_copy[index_S] = j;
+                    int cardType = CardType.getCardType(card_copy, myRoom);
+                    list.add(cardType);
+                }
+            }
+        } else if (ints.contains(52)) {
+            index_s = ints.indexOf(52);
+            for (int i = 0; i < 52; i++) {
+                int[] card_copy = new int[5];
+                System.arraycopy(brand, 0, card_copy, 0, 5);
+                card_copy[index_s] = i;
+                int cardType = CardType.getCardType(card_copy, myRoom);
+                list.add(cardType);
+            }
+        } else if (ints.contains(53)) {
+            index_S = ints.indexOf(53);
+            for (int j = 0; j < 52; j++) {
+                int[] card_copy = new int[5];
+                System.arraycopy(brand, 0, card_copy, 0, 5);
+                card_copy[index_S] = j;
+                int cardType = CardType.getCardType(card_copy, myRoom);
+                list.add(cardType);
+            }
+        } else {
+            int cardType = CardType.getCardType(brand, myRoom);
+            list.add(cardType);
+        }
+        Collections.sort(list);
+
+        int num = list.get(list.size() - 1);
+        return num;
+    }
+
     /*
      * @Author:ZhaoQi
      *
@@ -124,6 +177,8 @@ public class CardType {
      */
     public static int getCardType(int[] brand, RoomBean myRoom) {
         Leaflet(brand);
+        //抽出癞子 做出癞子排序 递归检测牌型
+
         if (GodenFlower_L(brand) != -1) {// 同花顺
             return GodenFlower_L(brand);
         }
@@ -263,7 +318,7 @@ public class CardType {
      * 是否为同花顺子牛
      *
      * @param brand
-     * @param key
+     * @param
      * @return
      */
     public static int straightf(int[] brand) {
@@ -290,7 +345,7 @@ public class CardType {
      * 同花牛
      *
      * @param brand
-     * @param key
+     * @param
      */
     private static int GodenFlower_I(int[] brand) {
         int count = flowers(brand);
@@ -325,7 +380,7 @@ public class CardType {
      * 是否为同花牛
      *
      * @param brand
-     * @param key
+     * @param
      * @return
      */
     public static int flowers(int[] brand) {
@@ -349,7 +404,7 @@ public class CardType {
      * 顺子牛
      *
      * @param brand
-     * @param key
+     * @param
      */
     private static int GodenFlower_G(int[] brand) {
         int count = straight(brand);
@@ -384,7 +439,7 @@ public class CardType {
      * 是否为顺子牛
      *
      * @param brand
-     * @param key
+     * @param
      * @return
      */
     public static int straight(int[] brand) {
@@ -409,7 +464,7 @@ public class CardType {
      * 五小牛
      *
      * @param brand
-     * @param key
+     * @param
      */
     private static int GodenFlower_F(int[] brand) {
         int brandMax = five(brand);
@@ -440,7 +495,7 @@ public class CardType {
      * 是否为5小牛
      *
      * @param brand
-     * @param key
+     * @param
      * @return
      */
 
@@ -469,7 +524,7 @@ public class CardType {
      * 葫芦牛
      *
      * @param brand
-     * @param key
+     * @param
      * @return
      */
     private static int GodenFlower_E(int[] brand) {
@@ -511,7 +566,7 @@ public class CardType {
      * 判断是否为葫芦牛
      *
      * @param brand
-     * @param key
+     * @param
      * @return
      */
     public static int gourd(int[] brand) {
@@ -536,7 +591,7 @@ public class CardType {
      * 检测炸弹牛牌型
      *
      * @param brand
-     * @param key
+     * @param
      * @param brand
      * @return 相同牌的数值
      */
@@ -587,7 +642,7 @@ public class CardType {
      * 检测牌型是否相同
      *
      * @param brand
-     * @param key
+     * @param
      * @return
      */
     private static int GofenFlower(int[] brand) {
@@ -615,7 +670,7 @@ public class CardType {
     /***
      * 检测牛一到牛九
      *
-     * @param key
+     * @param
      *
      * @return
      */
@@ -760,7 +815,7 @@ public class CardType {
      * 检测五花牛
      *
      * @param brand
-     * @param key
+     * @param
      *
      * @return -1不是五花牛
      */
@@ -891,7 +946,7 @@ public class CardType {
      *
      * @Date:2019/3/14
      */
-    public static int getOdds(int[] brand, RoomBean myRoom) {
+    public static int getOdds(int odds, RoomBean myRoom) {
         /**
          *         牛一(1倍)
          *         牛二(2倍)
@@ -905,7 +960,6 @@ public class CardType {
          *         牛牛(10倍)
          * */
         int odd = 1;
-        int odds = getCardType(brand, myRoom);
         if (odds == 120) {
             return 10;
         }
@@ -974,7 +1028,50 @@ public class CardType {
      * @return
      */
     public static int backPatterns(int[] brand, RoomBean myRoom) {
-        int num = getCardType(brand, myRoom);
+        ArrayList<Integer> list = new ArrayList<>();
+        List<Integer> ints = Arrays.stream(brand).boxed().collect(Collectors.toList());
+        int index_s;//小王的小标
+        int index_S;//大王的下标
+        if (ints.contains(52) && ints.contains(53)) {
+            index_s = ints.indexOf(52);
+            index_S = ints.indexOf(53);
+            for (int i = 0; i < 52; i++) {
+                int[] card_copy = new int[5];
+                System.arraycopy(brand, 0, card_copy, 0, 5);
+                card_copy[index_s] = i;
+                for (int j = i; j < 52; j++) {
+                    System.arraycopy(brand, 0, card_copy, 0, 5);
+                    card_copy[index_s] = i;
+                    card_copy[index_S] = j;
+                    int cardType = CardType.getCardType(card_copy, myRoom);
+                    list.add(cardType);
+                }
+            }
+        } else if (ints.contains(52)) {
+            index_s = ints.indexOf(52);
+            for (int i = 0; i < 52; i++) {
+                int[] card_copy = new int[5];
+                System.arraycopy(brand, 0, card_copy, 0, 5);
+                card_copy[index_s] = i;
+                int cardType = CardType.getCardType(card_copy, myRoom);
+                list.add(cardType);
+            }
+        } else if (ints.contains(53)) {
+            index_S = ints.indexOf(53);
+            for (int j = 0; j < 52; j++) {
+                int[] card_copy = new int[5];
+                System.arraycopy(brand, 0, card_copy, 0, 5);
+                card_copy[index_S] = j;
+                int cardType = CardType.getCardType(card_copy, myRoom);
+                list.add(cardType);
+            }
+        } else {
+            int cardType = CardType.getCardType(brand, myRoom);
+            list.add(cardType);
+        }
+        Collections.sort(list);
+
+        int num = list.get(list.size() - 1);
         if (num > 900) {
             return 950;
         }
@@ -1008,7 +1105,7 @@ public class CardType {
     /**
      * 没牛返回最大牌值
      *
-     * @param number
+     * @param
      * @return @throws
      */
     public static int GodenFlower_D(int[] brand) {

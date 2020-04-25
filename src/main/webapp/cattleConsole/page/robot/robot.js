@@ -59,7 +59,7 @@ layui.use(['layer','table','laydate'],function(){
          var arr = subString(data.img);
          var data = "";
          for (var i = 0 ; i < arr.length ; i++){
-             data+='<img style="text-align: center" src="'+baseUrl+arr[i]+'">';
+             data+='<img style="text-align: center" src="'+arr[i]+'">';
          }
          layer.open({
              title: '查看图片'

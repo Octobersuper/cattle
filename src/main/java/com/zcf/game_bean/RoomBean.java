@@ -97,7 +97,7 @@ public class RoomBean {
             user_positions[i] = -1;
         }
         // 默认回合数为1
-        this.game_number = 1;
+        this.game_number = 0;
         // 初始化房间未开始
         this.room_state = 0;
         // 初始化庄家id
@@ -217,7 +217,7 @@ public class RoomBean {
      */
     public void Initialization() {
         // 初始化扑克牌
-        setBrands(1,room_type==0?0:1);
+        setBrands(1,room_type);
         // 初始化游戏未开始
         setRoom_state(0);
         setRoom_state(0);
@@ -580,7 +580,7 @@ public class RoomBean {
                 // 发完牌就获取牌型
                 bean.setUser_brand_type(bean.BrandCount(rb, bean.getBrand()));
                 //设置牌型倍率
-                bean.setOdds(CardType.getOdds(bean.getBrand(),rb));
+                bean.setOdds(CardType.getOdds(bean.getUser_brand_type(),rb));
                 CardType.BrandIndex(bean.getBrand(), bean);
             }
         }

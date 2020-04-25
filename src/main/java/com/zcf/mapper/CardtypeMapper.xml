@@ -14,7 +14,7 @@
     </sql>
 
     <select id="getCard_type" resultType="String">
-        SELECT `value` FROM cardtype  WHERE id >= (SELECT FLOOR( MAX(id) * RAND()) FROM cardtype ) ORDER BY id LIMIT 1
+        SELECT `value` FROM  cardtype  AS t1  JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM `cardtype`)-(SELECT MIN(id) FROM cardtype))+(SELECT MIN(id) FROM cardtype)) AS id) AS t2 WHERE t1.id >= t2.id ORDER BY t1.id LIMIT 1
     </select>
 
 </mapper>

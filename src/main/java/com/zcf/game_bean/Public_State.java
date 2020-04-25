@@ -47,9 +47,12 @@ public class Public_State {
 	 *@ Return:
 	 *@ Date:2020/4/16
 	 */
-	public static PK_WebSocket getPkWebSocket() {
+	public static PK_WebSocket getPkWebSocket(String roomnumber) {
 		for (String key : clients.keySet()) {
 			PK_WebSocket socket = clients.get(key);
+			if(socket.rb==null || !socket.rb.getRoom_number().equals(roomnumber)){
+				continue;
+			}
 			if(socket.session != null && socket.session.isOpen()){
 				return socket;
 			}

@@ -75,7 +75,16 @@ public class UserBean implements Comparable<UserBean> {
 	private int odds;
 	//上级Id
 	private Long fId;
+	//是否是机器人
+	private int isAi;
 
+	public int getIsAi() {
+		return isAi;
+	}
+
+	public void setIsAi(int isAi) {
+		this.isAi = isAi;
+	}
 
 	public Long getfId() {
 		return fId;

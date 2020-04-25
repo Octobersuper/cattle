@@ -51,7 +51,7 @@ public class Time_Room extends Thread {
                 }
             }
             if (timer == 30) {//倒计时五秒开始
-                PK_WebSocket socket = Public_State.getPkWebSocket();
+                PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                 if (socket == null) {
                     continue;
                 } else {
@@ -72,10 +72,10 @@ public class Time_Room extends Thread {
             if (timer == 20) {
                 rb.selectBranker_id(rb);
                 returnMap.put("state", "0");
-                returnMap.put("type", "getBranker");
+                returnMap.put("type", "GetBranker");
                 returnMap.put("branker_id", rb.getBranker_id());
                 returnMap.put("timer", 5);
-                PK_WebSocket socket = Public_State.getPkWebSocket();
+                PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                 if (socket == null) {
                     continue;
                 } else {
@@ -87,7 +87,7 @@ public class Time_Room extends Thread {
 
             //闲家加倍阶段
             if (timer == 15) {
-                PK_WebSocket socket = Public_State.getPkWebSocket();
+                PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                 if (socket == null) {
                     continue;
                 } else {
@@ -97,7 +97,7 @@ public class Time_Room extends Thread {
                             user.setOdd(1);
                             returnMap.put("state", "0");
                             returnMap.put("userid", user.getUserid());
-                            returnMap.put("type", "xian_ord");
+                            returnMap.put("type", "Xian_ord");
                             returnMap.put("xian_ord", 1);
                             socket.sendMessageToAll(returnMap, rb);
                             socket.sendMessageTo(returnMap);
@@ -113,10 +113,10 @@ public class Time_Room extends Thread {
                 rb.setRoom_state(2);
                 returnMap.put("state", "0");
                 returnMap.put("timer", 5);
-                returnMap.put("type", "sendCards");
+                returnMap.put("type", "SendCards");
                 // returnMap.put("brand_list", rb.getRb_List());
                 rb.getRoomBean_Custom("userid-brand-user_brand_type", returnMap, "");
-                PK_WebSocket socket = Public_State.getPkWebSocket();
+                PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                 if (socket == null) {
                     continue;
                 } else {
@@ -140,10 +140,11 @@ public class Time_Room extends Thread {
                         returnMap.put("state", "0");
                         returnMap.put("type", "Open_brand");
                         returnMap.put("user_brand_type", user.getUser_brand_type());
+                        returnMap.put("odds", user.getOdds());
                         returnMap.put("brand_index", user.getBrand_index());
                         returnMap.put("brand", user.getBrand());
                         returnMap.put("userid", user.getUserid());
-                        PK_WebSocket socket = Public_State.getPkWebSocket();
+                        PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                         if (socket == null) {
                             break;
                         } else {
@@ -203,10 +204,10 @@ public class Time_Room extends Thread {
                 pk.insert();
 
                 returnMap.put("state", "0");
-                returnMap.put("type", "account");
+                returnMap.put("type", "Account");
                 rb.getRoomBean_Custom("userid-money-winnum-brand_index", returnMap, "");
                 //returnMap.put("list", list);
-                PK_WebSocket socket = Public_State.getPkWebSocket();
+                PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                 if (socket == null) {
                     continue;
                 } else {
@@ -225,7 +226,7 @@ public class Time_Room extends Thread {
                         returnMap.put("userid", user.getUserid());
                         returnMap.put("state", "0");
                         returnMap.put("type", "No_money");
-                        PK_WebSocket socket = Public_State.getPkWebSocket();
+                        PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                         if (socket == null) {
                             break;
                         } else {
@@ -237,20 +238,39 @@ public class Time_Room extends Thread {
                         returnMap.put("userid", user.getUserid());
                         returnMap.put("state", "0");
                         returnMap.put("type", "Exit_room");
-                        PK_WebSocket socket = Public_State.getPkWebSocket();
+                        PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                         if (socket == null) {
                             break;
                         } else {
                             socket.sendMessageToAll(returnMap, rb);
+                            socket.sendMessageTo(returnMap);
                         }
                         rb.getGame_userList().remove(user);
                         rb.remove_options(user.getUserid());
                         returnMap.clear();
                         Public_State.clients.remove(String.valueOf(user.getUserid()));
                     }
+                    if(user.getGametype()==3){//观战机器人 设置成参战
+                        user.setGametype(1);
+                        int down = gs.Sit_down(user, rb);
+                        if (down == 0) {
+                            returnMap.put("state", "0"); // 坐下成功
+                            returnMap.put("userid", user.getUserid());
+                            returnMap.put("type", "Sit_down");
+                            returnMap.put("user_positions", rb.getUser_positions());
+                            rb.getRoomBean_Custom("userid-nickname-avatarurl-money", returnMap,"");
+                            PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
+                            if (socket == null) {
+                                break;
+                            } else {
+                                socket.sendMessageToAll(returnMap, rb);
+                            }
+                            socket.Room_change(rb, 0);
+                        }
+                    }
                 }
                 rb.Initialization();
-                timer = 30;
+                timer = 31;
             }
 
             timer--;

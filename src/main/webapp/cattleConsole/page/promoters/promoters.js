@@ -40,7 +40,7 @@ layui.use(['form','layer','table','laydate'],function(){
                     }else  if(d.type==2){
                         return "<span style='color: #ffb508;'>提现</span>";
                     }else  if(d.type==3){
-                        return "<span style='color: #0064ff;'>支付宝提现</span>";
+                        return "<span style='color: #019688;'>支付宝提现</span>";
                     }else  if(d.type==4){
                         return "<span style='color: #ff7e00;'>银行卡提现</span>";
                     }
@@ -48,9 +48,9 @@ layui.use(['form','layer','table','laydate'],function(){
             ,{field: 'money', title: '申请金额',align:'center',width:136,sort:true}
             ,{field: 'state', title: '申请情况',align:'center',width:136,sort:true,templet:function (d) {
                     if(d.state==0){
-                        return "<span style='color: green'>审核中</span>";
+                        return "<span style='color: #807a4c'>审核中</span>";
                     }else  if(d.state==1){
-                        return "<span style='color: #ff6d00;'>已同意</span>";
+                        return "<span style='color: #2d9602;'>已同意</span>";
                     }else  if(d.state==2){
                         return "<span style='color: red;'>已拒绝</span>";
                     }

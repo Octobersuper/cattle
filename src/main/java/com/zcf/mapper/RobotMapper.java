@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface RobotMapper extends BaseMapper<Robot> {
 
+    Robot getRodom();
 }
