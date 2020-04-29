@@ -168,7 +168,9 @@ public class GameRechargeController {
                     userTable.setMoney(userTable.getMoney() - gameRecharge.getMoney());
                     userTable.updateById();
                 }
-                return Body.BODY_200;
+                HashMap<String, Double> map = new HashMap<>();
+                map.put("money",userTable.getMoney());
+                return Body.newInstance(map);
             }
             return Body.BODY_451;
         }

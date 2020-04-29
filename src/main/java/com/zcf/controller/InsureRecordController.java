@@ -46,7 +46,7 @@ public class InsureRecordController {
     @GetMapping("get")
     public Body get(InsureRecord pt){
         EntityWrapper<InsureRecord> e = new EntityWrapper<>();
-        e.eq("userid",pt.getUserid()).orderBy("createtime",false);
+        e.eq("type",pt.getType()).eq("userid",pt.getUserid()).orderBy("createtime",false);
         List<InsureRecord> list = im.selectList(e);
         if(list.size()!=0){
             HashMap<Object, Object> map = new HashMap<>();
@@ -78,7 +78,7 @@ public class InsureRecordController {
                     user.setMoney(user.getMoney()-insureRecord.getMoney());
                     user.setInsure(user.getInsure()+insureRecord.getMoney());
                     user.updateById();
-                    return Body.BODY_200;
+                    return Body.newInstance(user);
                 }
                 return Body.newInstance(451,"插入记录失败，请稍后重试");
             }
@@ -91,7 +91,7 @@ public class InsureRecordController {
                     user.setMoney(user.getMoney()+insureRecord.getMoney());
                     user.setInsure(user.getInsure()-insureRecord.getMoney());
                     user.updateById();
-                    return Body.BODY_200;
+                    return Body.newInstance(user);
                 }
                 return Body.newInstance(451,"插入记录失败，请稍后重试");
             }

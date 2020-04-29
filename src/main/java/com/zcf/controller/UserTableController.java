@@ -2,6 +2,7 @@ package com.zcf.controller;
 
 
 import com.zcf.game_bean.Public_State;
+import com.zcf.game_bean.UserBean;
 import com.zcf.game_center.PK_WebSocket;
 import com.zcf.pojo.UserTable;
 import com.zcf.service.impl.UserTableServiceImpl;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
+
+import java.util.HashMap;
 
 /**
  * <p>
@@ -99,9 +102,28 @@ public class UserTableController {
                 socket.userBean.setWinodds(user.getWinodds());
             }
         }
+        if(user.getfId()!=null){
+            UserBean userBean = userService.selectByid(user.getfId());
+            if(userBean.getRole()!=1){
+                return Body.newInstance(451,"非代理玩家无法绑定");
+            }
+        }
         boolean b = user.updateById();
         if (b){
-            return Body.BODY_200;
+            HashMap<String, Object> map = new HashMap<>();
+            if(user.getfId()!=null){
+                user = user.selectById();
+                map.put("type",0);
+                map.put("fId",user.getfId());
+                return Body.newInstance(map);
+            }else if(user.getZfb()!=null || user.getBankcard()!=null){
+                user = user.selectById();
+                map.put("type",1);
+                map.put("zfb",user.getZfb());
+                map.put("bankcard",user.getBankcard());
+                return Body.newInstance(map);
+            }else
+                return Body.BODY_200;
         }
         return Body.BODY_451;
     }

@@ -78,7 +78,9 @@ public class CarryController {
                 UserTable touser = um.selectById(carry.getTouser());
                 touser.setMoney(touser.getMoney() + carry.getMoney());
                 touser.updateById();
-                return Body.BODY_200;
+                HashMap<String, Double> map = new HashMap<>();
+                map.put("money",user.getMoney());
+                return Body.newInstance(map);
             }
             return Body.BODY_451;
         }

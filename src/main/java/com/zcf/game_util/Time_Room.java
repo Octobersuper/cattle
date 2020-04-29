@@ -3,6 +3,7 @@ package com.zcf.game_util;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import com.zcf.game_bean.Public_State;
 import com.zcf.game_bean.RoomBean;
@@ -22,7 +23,7 @@ public class Time_Room extends Thread {
 
     public Time_Room(RoomBean rb, GameService gs) {
         this.rb = rb;
-        this.timer = 30;
+        this.timer = 40;
         this.gs = gs;
     }
 
@@ -41,35 +42,86 @@ public class Time_Room extends Thread {
                 break;
             }
             //如果人数不足两人 countune
-            if (timer <= 30 && timer >= 25) {
+            if (timer <= 40 && timer >= 35) {
                 rb.setRoom_state(0);
                 //如果人数不足两人 countune
                 if (rb.getGame_userList(0).size() < 2) {
                     System_Mess.system_Mess.ToMessagePrint("人数不足----");
-                    timer = 30;
+                    timer = 40;
                     break;
                 }
             }
-            if (timer == 30) {//倒计时五秒开始
+            if (timer == 40) {//倒计时五秒开始
                 PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                 if (socket == null) {
+                    timer = 41;
+                    rb.removeUsers();
                     continue;
                 } else {
                     returnMap.put("state", "0");
                     returnMap.put("type", "Start_game");
                     returnMap.put("timer", 10);
-                    socket.sendMessageTo(returnMap);
                     socket.sendMessageToAll(returnMap, rb);
+                    socket.sendMessageTo(returnMap,socket.userBean.getUserid());
                     returnMap.clear();
                 }
             }
 
-            if (timer == 25) {
+            if (timer == 35) {
                 rb.setRoom_state(1);
             }
 
+            if(timer==33){//机器人自动抢庄
+                List<UserBean> list = rb.getGame_userList(0);
+                for (UserBean userBean:list) {
+                    if(userBean.getIsAi()!=0){
+                        int branker_ord = new Random().nextInt(6);//随机数
+                        returnMap.put("state", "0");
+                        returnMap.put("userid", userBean.getUserid());
+                        returnMap.put("branker_ord", String.valueOf(branker_ord));
+                        returnMap.put("type", "Robbery");
+                        if (rb.getBranker_ord() < branker_ord) {
+                            rb.setBranker_ord(branker_ord);
+                        }
+                        userBean.setRobbery(branker_ord);
+                        PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
+                        if (socket == null) {
+                            timer = 41;
+                            rb.removeUsers();
+                            continue;
+                        } else {
+                            socket.sendMessageToAll(returnMap, rb);
+                            socket.sendMessageTo(returnMap,socket.userBean.getUserid());
+                        }
+                    }
+                }
+            }
+
+            if(timer==30){//玩家自动抢庄
+                returnMap.clear();
+                List<UserBean> list = rb.getGame_userList(0);
+                for (UserBean userBean:list) {
+                    if(userBean.getIsAi()==0 && userBean.getRobbery()==-1){//普通玩家
+                        returnMap.put("state", "0");
+                        returnMap.put("userid", userBean.getUserid());
+                        returnMap.put("branker_ord", "0");
+                        returnMap.put("type", "Robbery");
+                        PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
+                        if (socket == null) {
+                            timer = 41;
+                            rb.removeUsers();
+                            continue;
+                        } else {
+                            socket.sendMessageToAll(returnMap, rb);
+                            socket.sendMessageTo(returnMap,socket.userBean.getUserid());
+                        }
+                    }
+                }
+            }
+
             //抢庄阶段 选出庄家
-            if (timer == 20) {
+            if (timer == 29) {
+                returnMap.clear();
                 rb.selectBranker_id(rb);
                 returnMap.put("state", "0");
                 returnMap.put("type", "GetBranker");
@@ -77,65 +129,97 @@ public class Time_Room extends Thread {
                 returnMap.put("timer", 5);
                 PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                 if (socket == null) {
+                    timer = 41;
+                    rb.removeUsers();
                     continue;
                 } else {
                     socket.sendMessageToAll(returnMap, rb);
-                    socket.sendMessageTo(returnMap);
+                    socket.sendMessageTo(returnMap,socket.userBean.getUserid());
                 }
                 returnMap.clear();
             }
-
-            //闲家加倍阶段
-            if (timer == 15) {
+            //机器人闲家加倍阶段
+            if(timer==26){
                 PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                 if (socket == null) {
+                    timer = 41;
+                    rb.removeUsers();
                     continue;
                 } else {
-                    for (UserBean user :
-                            rb.getGame_userList(0)) {
-                        if (user.getOdd() == 0) {
+                    int[] odds = {1,5,10,15,20};
+                    List<UserBean> list = rb.getGame_userList(0);
+                    for (UserBean user :list) {
+                        if (user.getOdd() == 0 && user.getIsAi()==1 &&rb.getBranker_id()!=user.getUserid()) {
+                            int ord = new Random().nextInt(5);//随机数
+                            ord = odds[ord];
+                            user.setOdd(ord);
+                            returnMap.put("state", "0");
+                            returnMap.put("userid", user.getUserid());
+                            returnMap.put("type", "Xian_ord");
+                            returnMap.put("xian_ord", ord);
+                            socket.sendMessageToAll(returnMap, rb);
+                            socket.sendMessageTo(returnMap,socket.userBean.getUserid());
+                        }
+                    }
+                }
+            }
+
+            //普通闲家加倍阶段
+            if (timer == 24) {
+                PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
+                if (socket == null) {
+                    timer = 41;
+                    rb.removeUsers();
+                    continue;
+                } else {
+                    List<UserBean> list = rb.getGame_userList(0);
+                    for (UserBean user :list) {
+                        if (user.getOdd() == 0 && user.getIsAi()==0) {
                             user.setOdd(1);
                             returnMap.put("state", "0");
                             returnMap.put("userid", user.getUserid());
                             returnMap.put("type", "Xian_ord");
                             returnMap.put("xian_ord", 1);
                             socket.sendMessageToAll(returnMap, rb);
-                            socket.sendMessageTo(returnMap);
+                            socket.sendMessageTo(returnMap,socket.userBean.getUserid());
                         }
                     }
                 }
             }
 
             // 开始发牌
-            if (timer == 13) {
+            if (timer == 23) {
                 // 发牌
                 rb.GrantBrand(5, rb);
                 rb.setRoom_state(2);
                 returnMap.put("state", "0");
-                returnMap.put("timer", 5);
+                returnMap.put("timer", 10);
                 returnMap.put("type", "SendCards");
                 // returnMap.put("brand_list", rb.getRb_List());
                 rb.getRoomBean_Custom("userid-brand-user_brand_type", returnMap, "");
                 PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                 if (socket == null) {
+                    timer = 41;
+                    rb.removeUsers();
                     continue;
                 } else {
                     socket.sendMessageToAll(returnMap, rb);
-                    socket.sendMessageTo(returnMap);
+                    socket.sendMessageTo(returnMap,socket.userBean.getUserid());
                 }
                 returnMap.clear();
             }
 
             //判断是否所有人都开牌  都开牌就直接开牌
-            if (timer < 13 && timer > 5) {
+            if (timer < 23 && timer > 13) {
                 if (rb.getUserBrandState()) {
-                    timer = 4;
+                    timer = 12;
                 }
             }
             //开牌阶段
-            if (timer == 5) {
+            if (timer == 13) {
+                List<UserBean> list = rb.getGame_userList(0);
                 for (UserBean user :
-                        rb.getGame_userList(0)) {
+                        list) {
                     if (user.getOpen_brand() != 1) {
                         returnMap.put("state", "0");
                         returnMap.put("type", "Open_brand");
@@ -146,10 +230,12 @@ public class Time_Room extends Thread {
                         returnMap.put("userid", user.getUserid());
                         PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                         if (socket == null) {
-                            break;
+                            timer = 41;
+                            rb.removeUsers();
+                            continue;
                         } else {
                             socket.sendMessageToAll(returnMap, rb);
-                            socket.sendMessageTo(returnMap);
+                            socket.sendMessageTo(returnMap,socket.userBean.getUserid());
                         }
                     }
                 }
@@ -157,10 +243,11 @@ public class Time_Room extends Thread {
             }
 
             // 结算
-            if (timer == 4) {
-                for (int i = 0; i < rb.getGame_userList(0).size(); i++) {
-                    if (rb.getGame_userList(0).get(i).getUserid() != rb.getBranker_id()) {
-                        UserBean bean = rb.getUserBean(rb.getGame_userList(0).get(i).getUserid());
+            if (timer == 12) {
+                List<UserBean> list = rb.getGame_userList(0);
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getUserid() != rb.getBranker_id()) {
+                        UserBean bean = rb.getUserBean(list.get(i).getUserid());
                         gs.EndGame(rb, bean);
                         //上局回顾
                         String re = "";
@@ -209,10 +296,12 @@ public class Time_Room extends Thread {
                 //returnMap.put("list", list);
                 PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                 if (socket == null) {
+                    timer = 41;
+                    rb.removeUsers();
                     continue;
                 } else {
                     socket.sendMessageToAll(returnMap, rb);
-                    socket.sendMessageTo(returnMap);
+                    socket.sendMessageTo(returnMap,socket.userBean.getUserid());
                 }
                 returnMap.clear();
             }
@@ -228,11 +317,14 @@ public class Time_Room extends Thread {
                         returnMap.put("type", "No_money");
                         PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                         if (socket == null) {
-                            break;
+                            timer = 41;
+                            rb.removeUsers();
+                            continue;
                         } else {
-                            socket.sendMessageTo(returnMap);
+                            socket.sendMessageTo(returnMap,user.getUserid());
                         }
                         returnMap.clear();
+                        socket.Room_change(rb, 0);
                     }
                     if (user.getGametype() == 2 || user.getMoney() <= 0) {
                         returnMap.put("userid", user.getUserid());
@@ -240,15 +332,18 @@ public class Time_Room extends Thread {
                         returnMap.put("type", "Exit_room");
                         PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                         if (socket == null) {
-                            break;
+                            timer = 41;
+                            rb.removeUsers();
+                            continue;
                         } else {
                             socket.sendMessageToAll(returnMap, rb);
-                            socket.sendMessageTo(returnMap);
+                            socket.sendMessageTo(returnMap,socket.userBean.getUserid());
                         }
                         rb.getGame_userList().remove(user);
                         rb.remove_options(user.getUserid());
                         returnMap.clear();
                         Public_State.clients.remove(String.valueOf(user.getUserid()));
+                        socket.Room_change(rb, 0);
                     }
                     if(user.getGametype()==3){//观战机器人 设置成参战
                         user.setGametype(1);
@@ -261,16 +356,23 @@ public class Time_Room extends Thread {
                             rb.getRoomBean_Custom("userid-nickname-avatarurl-money", returnMap,"");
                             PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                             if (socket == null) {
-                                break;
+                                timer = 41;
+                                rb.removeUsers();
+                                continue;
                             } else {
                                 socket.sendMessageToAll(returnMap, rb);
+                                socket.sendMessageTo(returnMap,socket.userBean.getUserid());
                             }
                             socket.Room_change(rb, 0);
                         }
                     }
                 }
                 rb.Initialization();
-                timer = 31;
+                timer = 41;/*
+                count++;
+                if(count==3){
+                    break;
+                }*/
             }
 
             timer--;

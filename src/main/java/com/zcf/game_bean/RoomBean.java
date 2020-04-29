@@ -11,9 +11,6 @@ import com.zcf.game_util.GameService;
 import com.zcf.service.impl.UserTableServiceImpl;
 import com.zcf.util.CardType;
 
-import static sun.plugin2.os.windows.OSVERSIONINFOA.size;
-
-
 /**
  * @author guolele
  * @date 2019年2月20日 上午9:20:50 房间类
@@ -220,7 +217,6 @@ public class RoomBean {
         setBrands(1,room_type);
         // 初始化游戏未开始
         setRoom_state(0);
-        setRoom_state(0);
         setGame_number(getGame_number() + 1);
         setBranker_ord(0);
         setBranker_id(0);
@@ -229,6 +225,7 @@ public class RoomBean {
         for (int i = 0; i < list.size(); i++) {
             list.get(i).Initialization();
             list.get(i).setUsertype(1);
+            list.get(i).setOdd(0);
         }
         // 启用一个线程来开始游戏
         /*
@@ -316,9 +313,10 @@ public class RoomBean {
      */
     public List<Map<String, Object>> getGame_userList(String usertable) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < getGame_userList(0).size(); i++) {
+        List<UserBean> game_userList = getGame_userList(0);
+        for (int i = 0; i < game_userList.size(); i++) {
             Map<String, Object> map = new HashMap<String, Object>();
-            getGame_userList(0).get(i).getUser_Custom(usertable, map);
+            game_userList.get(i).getUser_Custom(usertable, map);
             list.add(map);
         }
         return list;
@@ -958,15 +956,30 @@ public class RoomBean {
      */
     public boolean getUserBrandState() {
         int count = 0;
-        for (UserBean user :
-                getGame_userList(0)) {
+
+        List<UserBean> list = getGame_userList(0);
+        for (UserBean user :list) {
             if (user.getOpen_brand() == 1) {
                 count++;
             }
         }
-        if(count==getGame_userList(0).size()){
+        if(count==list.size()){
             return true;
         }
         return false;
+    }
+
+    public void removeUsers() {
+        ArrayList<UserBean> list = new ArrayList<>();
+        for (UserBean user :
+                game_userList) {
+            if(user.getIsAi()==0){
+                list.add(user);
+                remove_options(user.getUserid());
+            }
+        }
+        game_userList.removeAll(list);
+        setGame_number(0);
+        Initialization();
     }
 }

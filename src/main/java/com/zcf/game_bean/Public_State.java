@@ -42,7 +42,7 @@ public class Public_State {
 	/**
 	 *@ Author:ZhaoQi
 	 *@ methodName:
-	 *@ Params:获取一个能发送消息的线程
+	 *@ Params:获取一个能在房间内发送消息的线程
 	 *@ Description:
 	 *@ Return:
 	 *@ Date:2020/4/16
@@ -53,6 +53,24 @@ public class Public_State {
 			if(socket.rb==null || !socket.rb.getRoom_number().equals(roomnumber)){
 				continue;
 			}
+			if(socket.session != null && socket.session.isOpen()){
+				return socket;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 *@ Author:ZhaoQi
+	 *@ methodName:
+	 *@ Params:获取一个能在大厅发送消息的线程
+	 *@ Description:
+	 *@ Return:
+	 *@ Date:2020/4/29
+	 */
+	public static PK_WebSocket getPkWebSocket2(String roomnumber) {
+		for (String key : clients.keySet()) {
+			PK_WebSocket socket = clients.get(key);
 			if(socket.session != null && socket.session.isOpen()){
 				return socket;
 			}

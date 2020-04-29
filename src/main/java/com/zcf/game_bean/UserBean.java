@@ -32,8 +32,8 @@ public class UserBean implements Comparable<UserBean> {
 	private int role;
 	//反水比例
 	private int backwater;
-	// 是否抢庄 0不抢庄 其他：抢庄倍数
-	private int Robbery;
+	// 是否抢庄 -1没操作 0不抢庄 其他：抢庄倍数
+	private int Robbery = -1;
 	// 用户手里的牌
 	private int[] brand = new int[] { -1, -1, -1, -1, -1 };
 	// 下注 （抢庄）
@@ -227,7 +227,7 @@ public class UserBean implements Comparable<UserBean> {
 		this.winId = 0;
 		// 底分
 		this.user_fen = 0;
-		this.Robbery = 0;
+		this.Robbery = -1;
 		//初始化倍率
 		this.odd = 1;
 	}

@@ -146,7 +146,8 @@ public class RobotController {
             String path = request.getSession().getServletContext().getRealPath("robot");
             String targetFileName = iFileService.upload(file,path);
             targetFileName = "/robot/"+targetFileName;
-            robot.setImg("http://192.168.31.83:8080/cattle/"+targetFileName);
+            robot.setImg("http://47.111.153.101:8080/cattle/"+targetFileName);
+            //robot.setImg("http://localhost:8080/cattle/"+targetFileName);
             boolean b = robot.insert();
             if(b){
                 return  Body.BODY_200;
@@ -156,4 +157,5 @@ public class RobotController {
         return Body.newInstance(451,"文件不能为空");
     }
 }
+
 

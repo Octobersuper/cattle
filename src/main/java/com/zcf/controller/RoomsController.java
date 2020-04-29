@@ -162,10 +162,10 @@ public class RoomsController {
                                 PK_WebSocket socket = Public_State.getPkWebSocket(roomBean.getRoom_number());
                                 if (socket != null) {
                                     socket.sendMessageToAll(returnMap, roomBean);
-                                    socket.sendMessageTo(returnMap);
+                                    socket.sendMessageTo(returnMap,socket.userBean.getUserid());
                                 }
                                 //判断房间人数是否需要开启游戏线程
-                                if (roomBean.getGame_userList(0).size() >= 2) {
+                                if (roomBean.getGame_userList(0).size() == 2) {
                                     new Time_Room(roomBean, gs).start();
                                 }
                             }
@@ -173,16 +173,29 @@ public class RoomsController {
                     }
                 } else {
                     //减少机器人
+                    ArrayList<UserBean> list = new ArrayList<>();
                     for (int i = 0; i < ai - rooms.getRobot(); i++) {
                         for (UserBean user :
                                 roomBean.getGame_userList(0)) {
-                            if (user.getIsAi() == 1) {
-                                user.setGametype(2);
-                                break;
+                            if(roomBean.getRoom_state()!=0){
+                                if (user.getIsAi() == 1) {
+                                    user.setGametype(2);
+                                    break;
+                                }
+                            }else{
+                                if (user.getIsAi() == 1) {
+                                    roomBean.remove_options(user.getUserid());
+                                    list.add(user);
+                                }
                             }
                         }
                     }
+                    roomBean.getGame_userList().removeAll(list);
                 }
+            }
+            PK_WebSocket pkWebSocket = Public_State.getPkWebSocket2(String.valueOf(rooms.getRoomnumber()));
+            if (pkWebSocket != null) {
+                pkWebSocket.Room_change(roomBean,0);
             }
         }else if (roomBean != null && roomBean.getGame_userList().size() != 0) {
             return Body.newInstance(451, "房间处于游戏状态，不可更改");
@@ -245,6 +258,10 @@ public class RoomsController {
                 roomBean.setDi_fen(rooms.getFen());
                 roomBean.setRoom_type(rooms.getRoomtype());
                 roomBean.setWater((double) rooms.getWater() / 100);
+                PK_WebSocket pkWebSocket = Public_State.getPkWebSocket2(String.valueOf(rooms.getRoomnumber()));
+                if (pkWebSocket != null) {
+                    pkWebSocket.Room_change(roomBean,4);
+                }
                 break;
             }
         }
@@ -294,6 +311,7 @@ public class RoomsController {
                                 do {
                                     j++;
                                     if (j == 6) {
+                                        user = null;
                                         break;
                                     }
                                     //去机器人库随机找出一个机器人 最多找五次
@@ -315,7 +333,7 @@ public class RoomsController {
                                         break;
                                     }
                                 } while (roomBean.getUserBean(user.getUserid()) != null);
-                                if (user.getUserid() != 0) {
+                                if (user!=null && user.getUserid() != 0) {
                                     gs.Sit_down(user, roomBean);
                                     roomBean.getGame_userList().add(user);
                                 }
@@ -331,4 +349,3 @@ public class RoomsController {
         System.err.println("当前房间数：" + Public_State.PKMap.size() + "-------------");
     }
 }
-

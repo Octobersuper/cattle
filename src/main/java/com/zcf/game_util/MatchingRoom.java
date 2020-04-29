@@ -28,13 +28,9 @@ public class MatchingRoom {
 		RoomBean rb = Public_State.PKMap.get(room_number);
 		rb.getLock().lock();
 		//当前房间未满
-		if (rb.getGame_userList(0).size()<rb.getFoundation()) {
-			rb.getGame_userList(1).add(userBean);
-			rb.getLock().unlock();
-			return rb;
-		}
+		rb.getGame_userList(1).add(userBean);
 		rb.getLock().unlock();
-		return null;
+		return rb;
 	}
 
 }
