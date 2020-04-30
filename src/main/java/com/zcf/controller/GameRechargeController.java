@@ -164,7 +164,7 @@ public class GameRechargeController {
             gameRecharge.setCreatetime(new Date());
             boolean b = gameRecharge.insert();
             if (b) {
-                if (gameRecharge.getType() == 2) {
+                if (gameRecharge.getType() == 3 || gameRecharge.getType() ==4) {
                     userTable.setMoney(userTable.getMoney() - gameRecharge.getMoney());
                     userTable.updateById();
                 }

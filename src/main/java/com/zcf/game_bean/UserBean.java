@@ -161,6 +161,19 @@ public class UserBean implements Comparable<UserBean> {
 				map.put(user, gametype);
 			if (user.equals("brand"))
 				map.put(user, brand);
+			if (user.equals("brand3")){
+				int[] brand = new int[3];
+				brand[0] = this.brand[0];
+				brand[1] = this.brand[1];
+				brand[2] = this.brand[2];
+				map.put("brand", brand);
+			}
+			if (user.equals("brand2")){
+				int[] brand = new int[2];
+				brand[0] = this.brand[3];
+				brand[1] = this.brand[4];
+				map.put("brand", brand);
+			}
 			if (user.equals("money"))
 				map.put(user, money);
 			if (user.equals("bet"))

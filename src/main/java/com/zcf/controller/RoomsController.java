@@ -128,6 +128,10 @@ public class RoomsController {
                             Robot robot = robotMapper.getRodom();
                             if (robot == null) {
                                 break;
+                            }else{
+                                if(Public_State.ISUser_Room(Integer.valueOf(String.valueOf(robot.getId())))){
+                                    break;
+                                }
                             }
                             user.setUserid(Integer.valueOf(String.valueOf(robot.getId())));
                             user.setNickname(robot.getName());

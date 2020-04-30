@@ -160,7 +160,7 @@ public class PK_WebSocket {
 
         // 坐下
         if ("Sit_down".equals(jsonTo.get("type"))) {
-            if((rb.getTimes()<=40&&rb.getTimes()>35) || (rb.getTimes()>=0 && rb.getTimes()<12)){
+            if((rb.getTimes()>=0 && rb.getTimes()<12)){
                 rb.getLock().lock();
                 int down = gs.Sit_down(userBean, rb);
                 if (down == 0) {

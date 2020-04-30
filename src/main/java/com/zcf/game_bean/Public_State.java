@@ -27,16 +27,16 @@ public class Public_State {
 	 * @param userid
 	 * @return
 	 */
-	public static String ISUser_Room(int userid) {
+	public static boolean ISUser_Room(int userid) {
 		//麻将
 		for (String key : PKMap.keySet()) {
 			RoomBean roomBean = PKMap.get(key);
 			for (UserBean userBean : roomBean.getGame_userList()) {
 				if (userBean.getUserid() == userid)
-					return roomBean.getRoom_number();
+					return true;
 			}
 		}
-		return null;
+		return false;
 	}
 
 	/**

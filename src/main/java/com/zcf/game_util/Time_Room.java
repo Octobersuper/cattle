@@ -64,10 +64,17 @@ public class Time_Room extends Thread {
                     socket.sendMessageToAll(returnMap, rb);
                     socket.sendMessageTo(returnMap,socket.userBean.getUserid());
                     returnMap.clear();
-                }
-            }
 
-            if (timer == 35) {
+                    //发牌  发三张
+                    rb.GrantBrand(5, rb);
+                    returnMap.put("state", "0");
+                    returnMap.put("type", "SendCards");
+                    // returnMap.put("brand_list", rb.getRb_List());
+                    rb.getRoomBean_Custom("userid-brand3-user_brand_type", returnMap, "");
+                    socket.sendMessageToAll(returnMap, rb);
+                    socket.sendMessageTo(returnMap,socket.userBean.getUserid());
+                    returnMap.clear();
+                }
                 rb.setRoom_state(1);
             }
 
@@ -187,16 +194,14 @@ public class Time_Room extends Thread {
                 }
             }
 
-            // 开始发牌
+            // 开始发牌  发两张
             if (timer == 23) {
-                // 发牌
-                rb.GrantBrand(5, rb);
                 rb.setRoom_state(2);
                 returnMap.put("state", "0");
                 returnMap.put("timer", 10);
                 returnMap.put("type", "SendCards");
                 // returnMap.put("brand_list", rb.getRb_List());
-                rb.getRoomBean_Custom("userid-brand-user_brand_type", returnMap, "");
+                rb.getRoomBean_Custom("userid-brand2-user_brand_type", returnMap, "");
                 PK_WebSocket socket = Public_State.getPkWebSocket(rb.getRoom_number());
                 if (socket == null) {
                     timer = 41;
