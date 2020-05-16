@@ -26,8 +26,8 @@
       <file leaf-file-name="addroom.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/page/rooms/addroom.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="19" column="44" selection-start-line="19" selection-start-column="44" selection-end-line="19" selection-end-column="44" />
+            <state relative-caret-position="672">
+              <caret line="42" column="14" lean-forward="true" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -198,7 +198,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="226" />
     <option name="y" value="134" />
     <option name="width" value="1255" />
@@ -348,15 +348,15 @@
       <workItem from="1587517742888" duration="7632000" />
       <workItem from="1587605923603" duration="4336000" />
       <workItem from="1589089270081" duration="67000" />
-      <workItem from="1589618706457" duration="166000" />
+      <workItem from="1589618706457" duration="800000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="208379000" />
+    <option name="totallyTimeSpent" value="209013000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12291667" />
@@ -694,8 +694,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/page/rooms/addroom.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="19" column="44" selection-start-line="19" selection-start-column="44" selection-end-line="19" selection-end-column="44" />
+        <state relative-caret-position="672">
+          <caret line="42" column="14" lean-forward="true" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
         </state>
       </provider>
     </entry>

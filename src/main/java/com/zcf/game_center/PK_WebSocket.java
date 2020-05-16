@@ -162,46 +162,53 @@ public class PK_WebSocket {
         // 坐下
         if ("Sit_down".equals(jsonTo.get("type"))) {
             rb.getLock().lock();
-            int down = gs.Sit_down(userBean, rb);
-            if (down == 0) {
+            if(rb.getRoom_state()!=0){
+                userBean.setGametype(3);
                 returnMap.put("state", "0"); // 坐下成功
                 returnMap.put("userid", userBean.getUserid());
-                returnMap.put("type", "Sit_down");
-                returnMap.put("user_positions", rb.getUser_positions());
-                rb.getRoomBean_Custom("userid-nickname-avatarurl-money", returnMap, "");
+                returnMap.put("type", "Jion_game");
                 sendMessageTo(returnMap);
-                sendMessageToAll(returnMap, rb);
-                Room_change(rb, 0);
-            } else {
-                returnMap.put("type", "Sit_down");
-                returnMap.put("state", "-1"); // 坐下失败
-                returnMap.put("msg", "坐下失败");
-                sendMessageTo(returnMap);
-            }
-            returnMap.clear();
-            rb.getLock().unlock();
-            //第二个人坐下启动开始游戏线程
-            List<UserBean> list = rb.getGame_userList(0);
-            if (list.size() == 2) {
-                new Time_Room(rb, gs).start();
+            }else{
+                int down = gs.Sit_down(userBean, rb);
+                if (down == 0) {
+                    returnMap.put("state", "0"); // 坐下成功
+                    returnMap.put("userid", userBean.getUserid());
+                    returnMap.put("type", "Sit_down");
+                    returnMap.put("user_positions", rb.getUser_positions());
+                    rb.getRoomBean_Custom("userid-nickname-avatarurl-money", returnMap, "");
+                    sendMessageTo(returnMap);
+                    sendMessageToAll(returnMap, rb);
+                    Room_change(rb, 0);
+                } else {
+                    returnMap.put("type", "Sit_down");
+                    returnMap.put("state", "-1"); // 坐下失败
+                    returnMap.put("msg", "坐下失败");
+                    sendMessageTo(returnMap);
+                }
+                returnMap.clear();
+                rb.getLock().unlock();
+                //第二个人坐下启动开始游戏线程
+                List<UserBean> list = rb.getGame_userList(0);
+                if (list.size() == 2) {
+                    new Time_Room(rb, gs).start();
+                }
             }
         }
 
         // 坐起
         if ("Sit_up".equals(jsonTo.get("type"))) {
-            if ((rb.getTimes() <= 40 && rb.getTimes() > 35) || (rb.getTimes() >= 0 && rb.getTimes() < 12)) {
-                returnMap.put("state", "0"); // 坐下成功
-                returnMap.put("userid", userBean.getUserid());
-                returnMap.put("type", "Sit_up");
-                returnMap.put("user_positions", rb.getUser_positions());
-                rb.getRoomBean_Custom("userid-nickname-avatarurl-money", returnMap, "");
-                userBean.setUsertype(0);
-                rb.remove_options(userBean.getUserid());
-                sendMessageTo(returnMap);
-                sendMessageToAll(returnMap, rb);
-                Room_change(rb, 0);
-                returnMap.clear();
-            }
+            returnMap.put("state", "0");
+            returnMap.put("userid", userBean.getUserid());
+            returnMap.put("type", "Sit_up");
+            returnMap.put("user_positions", rb.getUser_positions());
+            rb.getRoomBean_Custom("userid-nickname-avatarurl-money", returnMap, "");
+            userBean.setUsertype(0);
+            userBean.setGametype(0);
+            rb.remove_options(userBean.getUserid());
+            sendMessageTo(returnMap);
+            sendMessageToAll(returnMap, rb);
+            Room_change(rb, 0);
+            returnMap.clear();
         }
 
         // 抢庄
@@ -340,6 +347,10 @@ public class PK_WebSocket {
                     }
                     rb.getGame_userList().remove(userBean);
                 } else {
+                    returnMap.put("userid", userBean.getUserid());
+                    returnMap.put("state", "0");
+                    returnMap.put("type", "Exit_room");
+                    sendMessageTo(returnMap);
                     if (userBean.getUsertype() == 1) {
                         userBean.setGametype(2);
                     } else {
