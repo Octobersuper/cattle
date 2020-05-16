@@ -36,8 +36,8 @@ layui.use(['layer','table','laydate'],function(){
                         return "癞子牛牛";
                     }
                 }}
-            ,{field: 'game_number', title: '对战局数',align:'center',templet:function (d) {
-                   return d.game_number+"/不限局数";
+            ,{field: 'game_number', title: '局数',align:'center',templet:function (d) {
+                   return d.max_number;
                 }}
 	      	,{field: 'createTime', title: '创建时间',align:'center',sort:true, toolbar: '#createTime'}
 	        ,{fixed: 'right',field: 'userType', title: '操作', width:150, align:'left', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器

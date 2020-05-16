@@ -77,6 +77,16 @@ public class UserBean implements Comparable<UserBean> {
 	private Long fId;
 	//是否是机器人
 	private int isAi;
+	//以玩局数
+	private int playNumber;
+
+	public int getPlayNumber() {
+		return playNumber;
+	}
+
+	public void setPlayNumber(int playNumber) {
+		this.playNumber = playNumber;
+	}
 
 	public int getIsAi() {
 		return isAi;

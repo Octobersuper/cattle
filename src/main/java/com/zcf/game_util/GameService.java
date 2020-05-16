@@ -362,8 +362,13 @@ public class GameService extends Thread {
 			if (rb.getUser_positions()[i] == -1) {
 				// 如果座位未满 则按顺序添加用户到座位
 				rb.getUser_positions()[i] = userBean.getUserid();
-				userBean.setGametype(1);
-				userBean.setUsertype(1);// 设置用户已坐下
+				if(rb.getRoom_state()==0){
+					userBean.setGametype(1);
+					userBean.setUsertype(1);// 设置用户已坐下
+				}else{
+					userBean.setGametype(3);
+					userBean.setUsertype(0);// 设置用户已坐下
+				}
 				return 0;
 			}
 		}

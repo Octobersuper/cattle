@@ -251,6 +251,7 @@ public class Time_Room extends Thread {
             if (timer == 12) {
                 List<UserBean> list = rb.getGame_userList(0);
                 for (int i = 0; i < list.size(); i++) {
+                    list.get(i).setPlayNumber(list.get(i).getPlayNumber()+1);
                     if (list.get(i).getUserid() != rb.getBranker_id()) {
                         UserBean bean = rb.getUserBean(list.get(i).getUserid());
                         gs.EndGame(rb, bean);
@@ -309,6 +310,7 @@ public class Time_Room extends Thread {
                     socket.sendMessageTo(returnMap,socket.userBean.getUserid());
                 }
                 returnMap.clear();
+                rb.setRoom_state(0);
             }
 
             // 时间线程结束则更改房间状态并且开始下一局

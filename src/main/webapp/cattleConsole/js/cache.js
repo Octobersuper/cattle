@@ -1,5 +1,5 @@
-﻿//var baseUrl = "http://localhost:8080/cattle/";
-var baseUrl = "http://47.111.153.101:8080/cattle/";
+﻿var baseUrl = "http://localhost:8080/cattle/";
+//var baseUrl = "http://47.111.153.101:8080/cattle/";
 
 //获取系统时间
 var newDate = '';
